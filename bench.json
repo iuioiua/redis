@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "runtime": "Deno/2.1.9 aarch64-apple-darwin",
+  "cpu": "Apple M2",
+  "benches": [
+    {
+      "origin": "file:///Users/asher/GitHub/redis/bench.ts",
+      "group": null,
+      "name": "@iuioiua/redis",
+      "baseline": true,
+      "results": [
+        {
+          "ok": {
+            "n": 698,
+            "min": 666208.0,
+            "max": 1290709.0,
+            "avg": 727568.0,
+            "p75": 740791.0,
+            "p99": 922791.0,
+            "p995": 1008459.0,
+            "p999": 1290709.0,
+            "highPrecision": true,
+            "usedExplicitTimers": false
+          }
+        }
+      ]
+    },
+    {
+      "origin": "file:///Users/asher/GitHub/redis/bench.ts",
+      "group": null,
+      "name": "deno-redis",
+      "baseline": false,
+      "results": [
+        {
+          "ok": {
+            "n": 692,
+            "min": 683125.0,
+            "max": 1046791.0,
+            "avg": 733559.0,
+            "p75": 747167.0,
+            "p99": 890250.0,
+            "p995": 899084.0,
+            "p999": 1046791.0,
+            "highPrecision": true,
+            "usedExplicitTimers": false
+          }
+        }
+      ]
+    },
+    {
+      "origin": "file:///Users/asher/GitHub/redis/bench.ts",
+      "group": null,
+      "name": "npm:ioredis",
+      "baseline": false,
+      "results": [
+        {
+          "ok": {
+            "n": 711,
+            "min": 653625.0,
+            "max": 1219166.0,
+            "avg": 714098.0,
+            "p75": 732958.0,
+            "p99": 834166.0,
+            "p995": 1052375.0,
+            "p999": 1219166.0,
+            "highPrecision": true,
+            "usedExplicitTimers": false
+          }
+        }
+      ]
+    },
+    {
+      "origin": "file:///Users/asher/GitHub/redis/bench.ts",
+      "group": null,
+      "name": "npm:redis",
+      "baseline": false,
+      "results": [
+        {
+          "ok": {
+            "n": 41,
+            "min": 12875542.0,
+            "max": 17834416.0,
+            "avg": 16145225.0,
+            "p75": 17230334.0,
+            "p99": 17834416.0,
+            "p995": 17834416.0,
+            "p999": 17834416.0,
+            "highPrecision": true,
+            "usedExplicitTimers": false
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "@iuioiua/redis",
+  "version": "1.0.0",
+  "exports": "./mod.ts",
+  "imports": {
+    "@db/redis": "jsr:@db/redis@^0.37.1",
+    "@std/assert": "jsr:@std/assert@^1.0.11",
+    "@std/async": "jsr:@std/async@^1.0.10",
+    "@std/bytes": "jsr:@std/bytes@^1.0.5",
+    "@std/collections": "jsr:@std/collections@^1.0.10",
+    "@std/io": "jsr:@std/io@^0.225.2",
+    "ioredis": "npm:ioredis@^5.4.2",
+    "redis": "npm:redis@^4.7.0"
+  },
+  "tasks": {
+    "redis:start": "redis-server --save \"\" --appendonly no --daemonize yes",
+    "test": "deno test --allow-net --trace-leaks --coverage --doc --parallel --clean",
+    "test:dev": "deno task redis:start && deno task test || redis-cli SHUTDOWN",
+    "bench": "deno bench --allow-net --allow-env",
+    "bench:dev": "deno task redis:start && deno task bench",
+    "ok": "deno fmt --check && deno lint && deno task test",
+    "ok:dev": "deno fmt --check && deno lint && deno task test:dev"
+  },
+  "exclude": [
+    "/coverage"
+  ]
+}
