@@ -34,11 +34,6 @@ jobs:
       - name: Create lcov file
         run: deno coverage --lcov --output=cov.lcov
 
-      - name: Upload coverage
-        uses: codecov/codecov-action@v5
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
       - name: Build coverage explorer
         run: deno coverage --html
 

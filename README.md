@@ -2,7 +2,6 @@
 
 [![JSR](https://jsr.io/badges/@iuioiua/redis)](https://jsr.io/@iuioiua/redis)
 [![CI](https://github.com/iuioiua/redis/actions/workflows/ci.yml/badge.svg)](https://github.com/iuioiua/redis/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/iuioiua/redis/branch/main/graph/badge.svg?token=8IDAVSL014)](https://r2d2-coverage.deno.dev/)
 
 Minimal [Redis](https://redis.io/) client for [Deno](https://deno.land/).
 
@@ -33,6 +32,7 @@ assertEquals(reply2, "world");
 
 - [Documentation](https://jsr.io/@iuioiua/redis/doc)
 - [Contributing guidelines](./CONTRIBUTING.md)
+- [Test coverage](https://iuioiua-redis-coverage.deno.dev/)
 
 ## Size comparison
 
