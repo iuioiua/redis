@@ -45,6 +45,6 @@ jobs:
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
         with:
-          project: r2d2-coverage
+          project: iuioiua-redis-coverage
           entrypoint: jsr:@std/http/file-server
           root: coverage/html
