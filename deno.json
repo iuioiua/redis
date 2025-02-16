@@ -1,6 +1,6 @@
 {
   "name": "@iuioiua/redis",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "exports": "./mod.ts",
   "imports": {
     "@db/redis": "jsr:@db/redis@^0.38.0",
