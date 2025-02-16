@@ -69,6 +69,9 @@ Deno.test("readReply() - integer", () => readReplyTest(":42\r\n", 42));
 Deno.test("readReply() - bulk string", () =>
   readReplyTest("$5\r\nhello\r\n", "hello"));
 
+Deno.test("readReply() - bulk string containing CRLF (known issue)", () =>
+  readReplyTest("$7\r\nhello\r\n\r\n", "hello"));
+
 Deno.test("readReply() - emtpy bulk string", () =>
   readReplyTest("$0\r\n\r\n", ""));
 

@@ -34,6 +34,19 @@ assertEquals(reply2, "world");
 - [Contributing guidelines](./CONTRIBUTING.md)
 - [Test coverage](https://iuioiua-redis-coverage.deno.dev/)
 
+## Known issues
+
+### Replies containing CRLF
+
+This package currently doesn't correctly read replies that contain CRLF (`\r\n`)
+within the message. For example, if a bulk string contains a CRLF, it'll only
+return the message, up to that CLRF. The simple workaround for this is to use LF
+(`\n`) for delimiting newlines, instead of CRLF.
+
+> If this issue affects you, please open a
+> [new issue](https://github.com/iuioiua/redis/issues/new). Otherwise, this
+> issue is a "won't fix".
+
 ## Size comparison
 
 | Module         | Size (KB) | Dependencies |
