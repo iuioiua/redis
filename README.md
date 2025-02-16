@@ -47,15 +47,22 @@ return the message, up to that CLRF. The simple workaround for this is to use LF
 > [new issue](https://github.com/iuioiua/redis/issues/new). Otherwise, this
 > issue is a "won't fix".
 
-## Size comparison
+## Design
 
-| Module         | Size (KB) | Dependencies |
-| -------------- | --------- | ------------ |
-| @iuioiua/redis | 25.04     | 4            |
-| deno-redis     | 213.19    | 33           |
-| npm:ioredis    | 895.38    | 10           |
-| npm:redis      | 968.17    | 9            |
+Like Italian cooking, the design of this package is defined by what it doesn't
+do, rather than what it does do. It doesn't extend the functionality of a TCP
+connection. It doesn't implement a method for each Redis command, of which,
+there are hundreds. Instead, the Redis client consumes a TCP connection, lets
+the user write Redis commands and simply returns the parsed result according to
+the RESP data type. The result is a design with fewer moving parts, fewer bugs,
+less maintenance, and a smaller footprint than other JavaScript implementations
+of Redis clients.
 
-Recorded on December 20, 2024.
+| Module             | Size (KB) | Dependencies |
+| ------------------ | --------- | ------------ |
+| jsr:@iuioiua/redis | 25.25     | 5            |
+| jsr:@db/redis      | 214.31    | 34           |
+| npm:ioredis        | 897.71    | 10           |
+| npm:redis          | 968.17    | 9            |
 
-> Note: Results were produced using `deno info <module>`
+> Note: Results were produced using `deno info <module>` on February 16, 2025.
