@@ -36,7 +36,7 @@ Deno.bench({
 });
 
 Deno.bench({
-  name: "deno-redis",
+  name: "@db/redis",
   async fn() {
     await denoRedisConn.ping();
 

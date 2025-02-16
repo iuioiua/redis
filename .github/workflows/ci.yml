@@ -28,11 +28,8 @@ jobs:
       - name: Setup Deno
         uses: denoland/setup-deno@v2
 
-      - name: Verify formatting, run linter, run tests and generate lcov
+      - name: Verify formatting, run linter and run tests
         run: deno task ok
-
-      - name: Create lcov file
-        run: deno coverage --lcov --output=cov.lcov
 
       - name: Build coverage explorer
         run: deno coverage --html
