@@ -9,7 +9,6 @@
     "@std/bytes": "jsr:@std/bytes@^1.0.5",
     "@std/collections": "jsr:@std/collections@^1.0.10",
     "@std/io": "jsr:@std/io@^0.225.2",
-    "@std/streams": "jsr:@std/streams@^1.0.9",
     "ioredis": "npm:ioredis@^5.5.0",
     "redis": "npm:redis@^4.7.0"
   },
