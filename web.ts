@@ -1,6 +1,29 @@
-// deno-lint-ignore-file no-explicit-any
 import { chunk } from "@std/collections/chunk";
 import { concat } from "@std/bytes/concat";
+import {
+  ARRAY_PREFIX,
+  ARRAY_PREFIX_BYTES,
+  ATTRIBUTE_PREFIX,
+  BIG_NUMBER_PREFIX,
+  BLOB_ERROR_PREFIX,
+  BOOLEAN_PREFIX,
+  BULK_STRING_PREFIX,
+  BULK_STRING_PREFIX_BYTES,
+  type Command,
+  CRLF_BYTES,
+  DOUBLE_PREFIX,
+  ERROR_PREFIX,
+  INTEGER_PREFIX,
+  MAP_PREFIX,
+  NULL_PREFIX,
+  PUSH_PREFIX,
+  type Reply,
+  SET_PREFIX,
+  SIMPLE_STRING_PREFIX,
+  VERBATIM_STRING_PREFIX,
+} from "./_shared.ts";
+
+export type { Command, Reply };
 
 /**
  * A Redis client for interacting with a Redis server.
@@ -22,40 +45,29 @@ import { concat } from "@std/bytes/concat";
  * @module
  */
 
-/** Command sent to a Redis server. */
-export type Command = (string | number | Uint8Array)[];
-/** Reply received from a Redis server and triggered by a command. */
-export type Reply =
-  | string
-  | number
-  | null
-  | boolean
-  | bigint
-  | Record<string, any>
-  | Reply[];
-
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
-const ARRAY_PREFIX = "*".charCodeAt(0);
-const ATTRIBUTE_PREFIX = "|".charCodeAt(0);
-const BIG_NUMBER_PREFIX = "(".charCodeAt(0);
-const BLOB_ERROR_PREFIX = "!".charCodeAt(0);
-const BOOLEAN_PREFIX = "#".charCodeAt(0);
-const BULK_STRING_PREFIX = "$".charCodeAt(0);
-const DOUBLE_PREFIX = ",".charCodeAt(0);
-const ERROR_PREFIX = "-".charCodeAt(0);
-const INTEGER_PREFIX = ":".charCodeAt(0);
-const MAP_PREFIX = "%".charCodeAt(0);
-const NULL_PREFIX = "_".charCodeAt(0);
-const PUSH_PREFIX = ">".charCodeAt(0);
-const SET_PREFIX = "~".charCodeAt(0);
-const SIMPLE_STRING_PREFIX = "+".charCodeAt(0);
-const VERBATIM_STRING_PREFIX = "=".charCodeAt(0);
-
-const CRLF_BYTES = encoder.encode("\r\n");
-const ARRAY_PREFIX_BYTES = encoder.encode("*");
-const BULK_STRING_PREFIX_BYTES = encoder.encode("$");
+function createRequest(command: Command): Uint8Array {
+  const lines = [
+    ARRAY_PREFIX_BYTES,
+    encoder.encode(command.length.toString()),
+    CRLF_BYTES,
+  ];
+  for (const arg of command) {
+    const bytes = arg instanceof Uint8Array
+      ? arg
+      : encoder.encode(arg.toString());
+    lines.push(
+      BULK_STRING_PREFIX_BYTES,
+      encoder.encode(bytes.byteLength.toString()),
+      CRLF_BYTES,
+      bytes,
+      CRLF_BYTES,
+    );
+  }
+  return concat(lines);
+}
 
 class RedisSerializationStream extends TransformStream<Command, Uint8Array> {
   constructor() {
@@ -181,10 +193,7 @@ async function readReply(
 }
 
 export class RedisClient {
-  #conn: {
-    readable: ReadableStream<Uint8Array>;
-    writable: WritableStream<Uint8Array>;
-  };
+  #writer: WritableStreamDefaultWriter<Uint8Array>;
   #reader: ReadableStreamDefaultReader<Uint8Array>;
 
   constructor(
@@ -193,8 +202,8 @@ export class RedisClient {
       writable: WritableStream<Uint8Array>;
     },
   ) {
-    this.#conn = conn;
-    this.#reader = this.#conn.readable
+    this.#writer = conn.writable.getWriter();
+    this.#reader = conn.readable
       .pipeThrough(new RedisLineStream())
       .getReader();
   }

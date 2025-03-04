@@ -1,6 +1,6 @@
 import { assertEquals, assertRejects } from "@std/assert";
 import { Buffer } from "@std/io/buffer";
-import { type Command, RedisClient, type Reply } from "./mod.ts";
+import { type Command, RedisClient, type Reply } from "./deno.ts";
 
 const redisConn = await Deno.connect({ port: 6379 });
 const redisClient = new RedisClient(redisConn);
