@@ -105,11 +105,15 @@ async function* readLines(reader: Reader): AsyncIterableIterator<Uint8Array> {
 }
 
 function readNReplies(
-  length: number,
   iterator: AsyncIterableIterator<Uint8Array>,
+  length: number,
   raw = false,
 ): Promise<Reply[]> {
   return Array.fromAsync({ length }, () => readReply(iterator, raw));
+}
+
+function parseLine(value: Uint8Array): string {
+  return decoder.decode(value.slice(1));
 }
 
 async function readReply(
@@ -120,32 +124,31 @@ async function readReply(
   if (value.length === 0) {
     return Promise.reject(new TypeError("No reply received"));
   }
-  const line = decoder.decode(value.slice(1));
   switch (value[0]) {
     case ARRAY_PREFIX:
     case PUSH_PREFIX: {
-      const length = Number(line);
-      return length === -1 ? null : await readNReplies(length, iterator);
+      const length = Number(parseLine(value));
+      return length === -1 ? null : await readNReplies(iterator, length);
     }
     case ATTRIBUTE_PREFIX: {
       // TODO: include attribute data somehow
-      const length = Number(line) * 2;
+      const length = Number(parseLine(value)) * 2;
       // Read but don't return attribute data
-      await readNReplies(length, iterator);
+      await readNReplies(iterator, length);
       return readReply(iterator, raw);
     }
     case BIG_NUMBER_PREFIX:
-      return BigInt(line);
+      return BigInt(parseLine(value));
     case BLOB_ERROR_PREFIX: {
       // Skip to reading the next line, which is a string
       const { value } = await iterator.next();
       return Promise.reject(decoder.decode(value));
     }
     case BOOLEAN_PREFIX:
-      return line === "t";
+      return parseLine(value) === "t";
     case BULK_STRING_PREFIX:
     case VERBATIM_STRING_PREFIX: {
-      switch (line) {
+      switch (parseLine(value)) {
         case "-1":
           return null;
         case "0":
@@ -156,28 +159,30 @@ async function readReply(
     }
     case DOUBLE_PREFIX:
     case INTEGER_PREFIX: {
-      switch (line) {
+      switch (parseLine(value)) {
         case "inf":
           return Infinity;
         case "-inf":
           return -Infinity;
         default:
-          return Number(line);
+          return Number(parseLine(value));
       }
     }
     case ERROR_PREFIX:
-      return Promise.reject(line);
+      return Promise.reject(parseLine(value));
     case MAP_PREFIX: {
-      const length = Number(line) * 2;
-      const array = await readNReplies(length, iterator);
+      const length = Number(parseLine(value)) * 2;
+      const array = await readNReplies(iterator, length);
       return Object.fromEntries(chunk(array, 2));
     }
     case NULL_PREFIX:
       return null;
     case SET_PREFIX:
-      return new Set(await readNReplies(Number(line), iterator, raw));
+      return new Set(
+        await readNReplies(iterator, Number(parseLine(value)), raw),
+      );
     case SIMPLE_STRING_PREFIX:
-      return line;
+      return parseLine(value);
     // No prefix
     default:
       return raw ? value : decoder.decode(value);
@@ -459,7 +464,7 @@ export class RedisClient {
    */
   async *readReplies(raw = false): AsyncIterableIterator<Reply> {
     while (true) {
-      yield await readReply(this.#lines, raw);
+      yield readReply(this.#lines, raw);
     }
   }
 
@@ -492,7 +497,7 @@ export class RedisClient {
     return this.#enqueue(async () => {
       const bytes = concat(commands.map(createRequest));
       await writeAll(this.#conn, bytes);
-      return readNReplies(commands.length, this.#lines, raw);
+      return readNReplies(this.#lines, commands.length, raw);
     });
   }
 }
