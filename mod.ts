@@ -39,17 +39,12 @@ export type Reply =
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
-const CRLF_STRING = "\r\n";
-const ARRAY_PREFIX_STRING = "*";
-const BULK_STRING_PREFIX_STRING = "$";
-
-const CRLF = encoder.encode(CRLF_STRING);
-const ARRAY_PREFIX = ARRAY_PREFIX_STRING.charCodeAt(0);
+const ARRAY_PREFIX = "*".charCodeAt(0);
 const ATTRIBUTE_PREFIX = "|".charCodeAt(0);
 const BIG_NUMBER_PREFIX = "(".charCodeAt(0);
 const BLOB_ERROR_PREFIX = "!".charCodeAt(0);
 const BOOLEAN_PREFIX = "#".charCodeAt(0);
-const BULK_STRING_PREFIX = BULK_STRING_PREFIX_STRING.charCodeAt(0);
+const BULK_STRING_PREFIX = "$".charCodeAt(0);
 const DOUBLE_PREFIX = ",".charCodeAt(0);
 const ERROR_PREFIX = "-".charCodeAt(0);
 const INTEGER_PREFIX = ":".charCodeAt(0);
@@ -60,6 +55,10 @@ const SET_PREFIX = "~".charCodeAt(0);
 const SIMPLE_STRING_PREFIX = "+".charCodeAt(0);
 const VERBATIM_STRING_PREFIX = "=".charCodeAt(0);
 
+const CRLF_BYTES = encoder.encode("\r\n");
+const ARRAY_PREFIX_BYTES = encoder.encode("*");
+const BULK_STRING_PREFIX_BYTES = encoder.encode("$");
+
 /**
  * Transforms a command, which is an array of arguments, into an RESP request.
  *
@@ -67,18 +66,20 @@ const VERBATIM_STRING_PREFIX = "=".charCodeAt(0);
  */
 function createRequest(command: Command): Uint8Array {
   const lines = [
-    encoder.encode(ARRAY_PREFIX_STRING + command.length + CRLF_STRING),
+    ARRAY_PREFIX_BYTES,
+    encoder.encode(command.length.toString()),
+    CRLF_BYTES,
   ];
   for (const arg of command) {
     const bytes = arg instanceof Uint8Array
       ? arg
       : encoder.encode(arg.toString());
     lines.push(
-      encoder.encode(
-        BULK_STRING_PREFIX_STRING + bytes.byteLength + CRLF_STRING,
-      ),
+      BULK_STRING_PREFIX_BYTES,
+      encoder.encode(bytes.byteLength.toString()),
+      CRLF_BYTES,
       bytes,
-      CRLF,
+      CRLF_BYTES,
     );
   }
   return concat(lines);
@@ -93,7 +94,8 @@ async function* readLines(reader: Reader): AsyncIterableIterator<Uint8Array> {
     chunks = concat([chunks, buffer.subarray(0, result)]);
     let index;
     while (
-      (index = chunks.indexOf(CRLF[0])) !== -1 && chunks[index + 1] === CRLF[1]
+      (index = chunks.indexOf(CRLF_BYTES[0])) !== -1 &&
+      chunks[index + 1] === CRLF_BYTES[1]
     ) {
       yield chunks.subarray(0, index);
       chunks = chunks.subarray(index + 2);
