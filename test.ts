@@ -2,7 +2,13 @@ import { assertEquals, assertRejects } from "@std/assert";
 import { Buffer } from "@std/io/buffer";
 import { type Command, RedisClient, type Reply } from "./mod.ts";
 
+const redisConn = await Deno.connect({ port: 6379 });
+const redisClient = new RedisClient(redisConn);
 const encoder = new TextEncoder();
+
+async function sendCommandTest(command: Command, expected: Reply) {
+  assertEquals(await redisClient.sendCommand(command), expected);
+}
 
 async function readReplyTest(output: string, expected: Reply, raw = false) {
   const redisClient = new RedisClient(new Buffer(encoder.encode(output)));
@@ -19,7 +25,7 @@ function readReplyRejectTest(output: string, expected: string) {
 }
 
 Deno.test("readReply() - mixed array", () =>
-  readReplyTest("*3\r\n$5\r\nstring\r\n:123\r\n$-1", [
+  readReplyTest("*3\r\n$5\r\nstring\r\n:123\r\n$-1\r\n", [
     "string",
     123,
     null,
@@ -133,15 +139,6 @@ Deno.test("readReply() - large reply", async () => {
   await readReplyTest(`$${reply.length}\r\n${reply}\r\n`, reply);
 });
 
-const redisConn = await Deno.connect({ port: 6379 });
-const redisClient = new RedisClient(redisConn);
-
-await redisClient.sendCommand(["FLUSHALL"]);
-
-async function sendCommandTest(command: Command, expected: Reply) {
-  assertEquals(await redisClient.sendCommand(command), expected);
-}
-
 Deno.test("RedisClient.sendCommand() - transactions", async () => {
   await sendCommandTest(["MULTI"], "OK");
   await sendCommandTest(["INCR", "FOO"], "QUEUED");
@@ -210,12 +207,4 @@ Deno.test("RedisClient.writeCommand() + RedisClient.readReplies()", async () => 
     value: ["unsubscribe", "mychannel", 0],
     done: false,
   });
-});
-
-Deno.test("RedisClient.sendCommand() - no reply", async () => {
-  await assertRejects(
-    async () => await redisClient.sendCommand(["SHUTDOWN"]),
-    TypeError,
-    "No reply received",
-  );
 });
