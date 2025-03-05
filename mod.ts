@@ -89,6 +89,7 @@ async function* readLines(
   let chunks = new Uint8Array();
   while (true) {
     const { value } = await reader.read();
+    if (value === undefined) throw new Error("Unexpected EOF");
     chunks = concat([chunks, value!.subarray(0, value!.length)]);
     let index;
     while (
