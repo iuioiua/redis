@@ -13,18 +13,23 @@ const ioRedis = new Redis();
 
 const nodeRedisClient = await createClient().connect();
 
-Deno.bench({
-  name: "@iuioiua/redis",
-  baseline: true,
-  async fn() {
-    await redisClient.sendCommand(["PING"]);
+Deno.bench("@iuioiua/redis", { group: "ping", baseline: true }, async () => {
+  await redisClient.sendCommand(["PING"]);
+});
 
-    await redisClient.sendCommand(["SET", "mykey", "Hello"]);
-    await redisClient.sendCommand(["GET", "mykey"]);
-
+Deno.bench(
+  "@iuioiua/redis",
+  { group: "hash set and get", baseline: true },
+  async () => {
     await redisClient.sendCommand(["HSET", "hash", "a", "foo", "b", "bar"]);
     await redisClient.sendCommand(["HGETALL", "hash"]);
+  },
+);
 
+Deno.bench(
+  "@iuioiua/redis",
+  { group: "pipeline", baseline: true },
+  async () => {
     await redisClient.pipelineCommands([
       ["INCR", "X"],
       ["INCR", "X"],
@@ -32,63 +37,56 @@ Deno.bench({
       ["INCR", "X"],
     ]);
   },
+);
+
+Deno.bench("@db/redis", { group: "ping" }, async () => {
+  await denoRedisConn.ping();
 });
 
-Deno.bench({
-  name: "@db/redis",
-  async fn() {
-    await denoRedisConn.ping();
-
-    await denoRedisConn.set("mykey", "Hello");
-    await denoRedisConn.get("mykey");
-
-    await denoRedisConn.hset("hash", { a: "foo", b: "bar" });
-    await denoRedisConn.hgetall("hash");
-
-    const pl = denoRedisConn.pipeline();
-    pl.incr("X");
-    pl.incr("X");
-    pl.incr("X");
-    pl.incr("X");
-    await pl.flush();
-  },
+Deno.bench("@db/redis", { group: "hash set and get" }, async () => {
+  await denoRedisConn.hset("hash", { a: "foo", b: "bar" });
+  await denoRedisConn.hgetall("hash");
 });
 
-Deno.bench({
-  name: "npm:ioredis",
-  async fn() {
-    await ioRedis.ping();
-
-    await ioRedis.set("mykey", "Hello");
-    await ioRedis.get("mykey");
-
-    await ioRedis.hset("hash", { a: "foo", b: "bar" });
-    await ioRedis.hgetall("hash");
-
-    const pl = ioRedis.pipeline();
-    pl.incr("X");
-    pl.incr("X");
-    pl.incr("X");
-    pl.incr("X");
-    await pl.exec();
-  },
+Deno.bench("@db/redis", { group: "pipeline" }, async () => {
+  const pl = denoRedisConn.pipeline();
+  pl.incr("X");
+  pl.incr("X");
+  pl.incr("X");
+  pl.incr("X");
+  await pl.flush();
 });
 
-Deno.bench({
-  name: "npm:redis",
-  async fn() {
-    await nodeRedisClient.ping();
+Deno.bench("npm:ioredis", { group: "ping" }, async () => {
+  await ioRedis.ping();
+});
 
-    await nodeRedisClient.set("mykey", "Hello");
-    await nodeRedisClient.get("mykey");
+Deno.bench("npm:ioredis", { group: "hash set and get" }, async () => {
+  await ioRedis.hset("hash", { a: "foo", b: "bar" });
+  await ioRedis.hgetall("hash");
+});
 
-    await nodeRedisClient.hSet("hash", { a: "foo", b: "bar" });
-    await nodeRedisClient.hGetAll("hash");
+Deno.bench("npm:ioredis", { group: "pipeline" }, async () => {
+  const pl = ioRedis.pipeline();
+  pl.incr("X");
+  pl.incr("X");
+  pl.incr("X");
+  pl.incr("X");
+  await pl.exec();
+});
 
-    // Auto-pipelining
-    await nodeRedisClient.incr("X");
-    await nodeRedisClient.incr("X");
-    await nodeRedisClient.incr("X");
-    await nodeRedisClient.incr("X");
-  },
+Deno.bench("npm:redis", { group: "ping" }, async () => {
+  await nodeRedisClient.ping();
+});
+
+Deno.bench("npm:redis", { group: "hash set and get" }, async () => {
+  await nodeRedisClient.hSet("hash", { a: "foo", b: "bar" });
+  await nodeRedisClient.hGetAll("hash");
+});
+
+Deno.bench("npm:redis", { group: "pipeline" }, async () => {
+  await nodeRedisClient.incr("X");
+  await nodeRedisClient.incr("X");
+  await nodeRedisClient.incr("X");
+  await nodeRedisClient.incr("X");
 });
