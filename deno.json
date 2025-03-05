@@ -23,5 +23,8 @@
   },
   "exclude": [
     "/coverage"
-  ]
+  ],
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "dom.asynciterable", "esnext"]
+  }
 }
