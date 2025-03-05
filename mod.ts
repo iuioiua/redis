@@ -89,8 +89,7 @@ async function* readLines(
   let chunks = new Uint8Array();
   while (true) {
     const { value } = await reader.read();
-    if (value === undefined) break;
-    chunks = concat([chunks, value.subarray(0, value.length)]);
+    chunks = concat([chunks, value!.subarray(0, value!.length)]);
     let index;
     while (
       (index = chunks.indexOf(CRLF_BYTES[0])) !== -1 &&
