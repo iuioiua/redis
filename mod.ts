@@ -57,6 +57,11 @@ const CRLF_BYTES = encoder.encode("\r\n");
 const ARRAY_PREFIX_BYTES = encoder.encode("*");
 const BULK_STRING_PREFIX_BYTES = encoder.encode("$");
 
+/**
+ * Transforms a command, which is an array of arguments, into an RESP request.
+ *
+ * @see {@link https://redis.io/docs/reference/protocol-spec/#send-commands-to-a-redis-server}
+ */
 function createRequest(command: Command): Uint8Array {
   const lines = [
     ARRAY_PREFIX_BYTES,
