@@ -1,6 +1,6 @@
-import * as denoRedis from "@db/redis";
-import { Redis } from "ioredis";
-import { createClient } from "redis";
+import * as denoRedis from "jsr:@db/redis";
+import { Redis } from "npm:ioredis";
+import { createClient } from "npm:redis";
 
 import { RedisClient } from "./mod.ts";
 

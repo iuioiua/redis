@@ -261,7 +261,7 @@ async function readReply(
  *
  * ```ts ignore
  * import { RedisClient } from "@iuioiua/redis";
- * import { deadline } from "@std/async/deadline";
+ * import { deadline } from "jsr:@std/async/deadline";
  *
  * using redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
@@ -278,7 +278,7 @@ async function readReply(
  *
  * ```ts ignore
  * import { RedisClient } from "@iuioiua/redis";
- * import { retry } from "@std/async/retry";
+ * import { retry } from "jsr:@std/async/retry";
  *
  * using redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
