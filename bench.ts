@@ -1,6 +1,7 @@
 import * as denoRedis from "@db/redis";
 import { Redis } from "ioredis";
 import { createClient } from "redis";
+
 import { RedisClient } from "./mod.ts";
 
 const hostname = "127.0.0.1";
