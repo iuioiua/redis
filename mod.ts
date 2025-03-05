@@ -100,7 +100,6 @@ async function* readLines(
       chunks = chunks.subarray(index + 2);
     }
   }
-  yield chunks;
 }
 
 function readNReplies(
