@@ -3,14 +3,10 @@
   "version": "1.0.1",
   "exports": "./mod.ts",
   "imports": {
-    "@db/redis": "jsr:@db/redis@^0.38.0",
     "@std/assert": "jsr:@std/assert@^1.0.11",
-    "@std/async": "jsr:@std/async@^1.0.10",
     "@std/bytes": "jsr:@std/bytes@^1.0.5",
     "@std/collections": "jsr:@std/collections@^1.0.10",
-    "@std/streams": "jsr:@std/streams@^1.0.9",
-    "ioredis": "npm:ioredis@^5.5.0",
-    "redis": "npm:redis@^4.7.0"
+    "@std/streams": "jsr:@std/streams@^1.0.9"
   },
   "tasks": {
     "redis:start": "redis-server --save \"\" --appendonly no --daemonize yes",
