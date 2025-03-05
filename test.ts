@@ -1,5 +1,6 @@
+/// <reference lib="deno.ns" />
 import { assertEquals, assertRejects } from "@std/assert";
-import { Buffer } from "@std/io/buffer";
+import { Buffer } from "@std/streams/buffer";
 import { type Command, RedisClient, type Reply } from "./mod.ts";
 
 const redisConn = await Deno.connect({ port: 6379 });

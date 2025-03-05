@@ -1,8 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 import { chunk } from "@std/collections/chunk";
 import { concat } from "@std/bytes/concat";
-import { writeAll } from "@std/io/write-all";
-import type { Reader, Writer } from "@std/io/types";
 
 /**
  * A Redis client for interacting with a Redis server.
@@ -85,13 +83,14 @@ function createRequest(command: Command): Uint8Array {
   return concat(lines);
 }
 
-async function* readLines(reader: Reader): AsyncIterableIterator<Uint8Array> {
-  const buffer = new Uint8Array(1024);
+async function* readLines(
+  reader: ReadableStreamDefaultReader<Uint8Array>,
+): AsyncIterableIterator<Uint8Array> {
   let chunks = new Uint8Array();
   while (true) {
-    const result = await reader.read(buffer);
-    if (result === null) break;
-    chunks = concat([chunks, buffer.subarray(0, result)]);
+    const { value } = await reader.read();
+    if (value === undefined) throw new Error("Unexpected EOF");
+    chunks = concat([chunks, value.subarray(0, value.length)]);
     let index;
     while (
       (index = chunks.indexOf(CRLF_BYTES[0])) !== -1 &&
@@ -101,7 +100,6 @@ async function* readLines(reader: Reader): AsyncIterableIterator<Uint8Array> {
       chunks = chunks.subarray(index + 2);
     }
   }
-  yield chunks;
 }
 
 function readNReplies(
@@ -376,13 +374,18 @@ async function readReply(
  * ```
  */
 export class RedisClient {
-  #conn: Reader & Writer;
+  #writer: WritableStreamDefaultWriter<Uint8Array>;
   #lines: AsyncIterableIterator<Uint8Array>;
   #queue: Promise<any> = Promise.resolve();
 
-  constructor(conn: Reader & Writer) {
-    this.#conn = conn;
-    this.#lines = readLines(this.#conn);
+  constructor(
+    conn: {
+      readable: ReadableStream<Uint8Array>;
+      writable: WritableStream<Uint8Array>;
+    },
+  ) {
+    this.#writer = conn.writable.getWriter();
+    this.#lines = readLines(conn.readable.getReader());
   }
 
   #enqueue<T>(task: () => Promise<T>): Promise<T> {
@@ -411,7 +414,7 @@ export class RedisClient {
    */
   sendCommand(command: Command, raw = false): Promise<Reply> {
     return this.#enqueue(async () => {
-      await writeAll(this.#conn, createRequest(command));
+      await this.#writer.write(createRequest(command));
       return readReply(this.#lines, raw);
     });
   }
@@ -436,7 +439,7 @@ export class RedisClient {
    * ```
    */
   writeCommand(command: Command): Promise<void> {
-    return this.#enqueue(() => writeAll(this.#conn, createRequest(command)));
+    return this.#enqueue(() => this.#writer.write(createRequest(command)));
   }
 
   /**
@@ -496,7 +499,7 @@ export class RedisClient {
   pipelineCommands(commands: Command[], raw = false): Promise<Reply[]> {
     return this.#enqueue(async () => {
       const bytes = concat(commands.map(createRequest));
-      await writeAll(this.#conn, bytes);
+      await this.#writer.write(bytes);
       return readNReplies(this.#lines, commands.length, raw);
     });
   }
