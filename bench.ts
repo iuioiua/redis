@@ -1,3 +1,4 @@
+/// <reference lib="deno.ns" />
 import * as denoRedis from "jsr:@db/redis";
 import { Redis } from "npm:ioredis";
 import { createClient } from "npm:redis";
