@@ -84,13 +84,13 @@ function createRequest(command: Command): Uint8Array {
 }
 
 async function* readLines(
-  reader: ReadableStreamDefaultReader<Uint8Array>,
-): AsyncIterableIterator<Uint8Array> {
-  let chunks = new Uint8Array();
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) throw new Error("Unexpected EOF");
-    chunks = concat([chunks, value]);
+  readable: ReadableStream<Uint8Array<ArrayBufferLike>>,
+) {
+  let chunks: Uint8Array<ArrayBufferLike> = new Uint8Array(new ArrayBuffer(0));
+  for await (const chunk of readable) {
+    chunks = chunks.length
+      ? concat([chunks, chunk]) as Uint8Array<ArrayBufferLike>
+      : chunk;
     let index;
     while (
       (index = chunks.indexOf(CRLF_BYTES[0])) !== -1 &&
@@ -100,6 +100,7 @@ async function* readLines(
       chunks = chunks.subarray(index + 2);
     }
   }
+  throw new Error("Unexpected EOF");
 }
 
 function readNReplies(
@@ -385,7 +386,7 @@ export class RedisClient {
     },
   ) {
     this.#writer = conn.writable.getWriter();
-    this.#lines = readLines(conn.readable.getReader());
+    this.#lines = readLines(conn.readable);
   }
 
   #enqueue<T>(task: () => Promise<T>): Promise<T> {
@@ -413,8 +414,8 @@ export class RedisClient {
    * ```
    */
   sendCommand(command: Command, raw = false): Promise<Reply> {
-    return this.#enqueue(async () => {
-      await this.#writer.write(createRequest(command));
+    return this.#enqueue(() => {
+      this.#writer.write(createRequest(command));
       return readReply(this.#lines, raw);
     });
   }
@@ -497,9 +498,9 @@ export class RedisClient {
    * ```
    */
   pipelineCommands(commands: Command[], raw = false): Promise<Reply[]> {
-    return this.#enqueue(async () => {
+    return this.#enqueue(() => {
       const bytes = concat(commands.map(createRequest));
-      await this.#writer.write(bytes);
+      this.#writer.write(bytes);
       return readNReplies(this.#lines, commands.length, raw);
     });
   }
