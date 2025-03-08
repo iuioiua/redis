@@ -88,9 +88,7 @@ async function* readLines(
 ) {
   let chunks: Uint8Array<ArrayBufferLike> = new Uint8Array(new ArrayBuffer(0));
   for await (const chunk of readable) {
-    chunks = chunks.length
-      ? concat([chunks, chunk]) as Uint8Array<ArrayBufferLike>
-      : chunk;
+    chunks = concat([chunks, chunk]) as Uint8Array<ArrayBufferLike>;
     let index;
     while (
       (index = chunks.indexOf(CRLF_BYTES[0])) !== -1 &&
@@ -100,7 +98,6 @@ async function* readLines(
       chunks = chunks.subarray(index + 2);
     }
   }
-  throw new Error("Unexpected EOF");
 }
 
 function readNReplies(
