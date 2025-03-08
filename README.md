@@ -3,7 +3,8 @@
 [![JSR](https://jsr.io/badges/@iuioiua/redis)](https://jsr.io/@iuioiua/redis)
 [![CI](https://github.com/iuioiua/redis/actions/workflows/ci.yml/badge.svg)](https://github.com/iuioiua/redis/actions/workflows/ci.yml)
 
-Minimal [Redis](https://redis.io/) client for [Deno](https://deno.land/).
+Lightning-fast, lightweight and reliable [Redis](https://redis.io/) client for
+Bun, Cloudflare Workers, Deno and web browsers.
 
 ```ts
 import { RedisClient } from "@iuioiua/redis";
