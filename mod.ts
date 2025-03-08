@@ -117,9 +117,6 @@ async function readReply(
   raw = false,
 ): Promise<Reply> {
   const { value } = await iterator.next();
-  if (value.length === 0) {
-    return Promise.reject(new TypeError("No reply received"));
-  }
   switch (value[0]) {
     case ARRAY_PREFIX:
     case PUSH_PREFIX: {
