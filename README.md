@@ -67,7 +67,7 @@ and a smaller footprint than other JavaScript implementations of Redis clients.
 | ------------------ | --------- | ------------ |
 | jsr:@iuioiua/redis | 17.51     | 3            |
 | jsr:@db/redis      | 214.31    | 34           |
-| npm:ioredis        | 897.71    | 10           |
-| npm:redis          | 968.17    | 9            |
+| npm:ioredis        | 894.69    | 10           |
+| npm:redis          | 951.12    | 9            |
 
-> Note: Results were produced using `deno info <module>` on February 16, 2025.
+> Note: Results were produced using `deno info <module>` on March 9, 2025.
