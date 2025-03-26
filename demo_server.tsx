@@ -144,6 +144,20 @@ function HomePage(
             class="mx-auto block rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
           />
         </main>
+
+        <footer className="mx-auto max-w-7xl overflow-hidden px-6 py-20 sm:py-24 lg:px-8">
+          <nav
+            aria-label="Footer"
+            className="-mb-6 flex flex-wrap justify-center gap-x-12 gap-y-3 text-sm/6"
+          >
+            <a
+              href="https://github.com/iuioiua/redis"
+              class="text-gray-600 hover:text-gray-900"
+            >
+              Source
+            </a>
+          </nav>
+        </footer>
       </body>
     </html>
   );
