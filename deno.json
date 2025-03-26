@@ -6,7 +6,9 @@
     "@std/assert": "jsr:@std/assert@^1.0.12",
     "@std/bytes": "jsr:@std/bytes@^1.0.5",
     "@std/collections": "jsr:@std/collections@^1.0.10",
-    "@std/streams": "jsr:@std/streams@^1.0.9"
+    "@std/streams": "jsr:@std/streams@^1.0.9",
+    "preact": "npm:preact",
+    "preact-render-to-string": "npm:preact-render-to-string"
   },
   "tasks": {
     "redis:start": "redis-server --save \"\" --appendonly no --daemonize yes",
@@ -15,12 +17,15 @@
     "bench": "deno bench --allow-net --allow-env",
     "bench:dev": "deno task redis:start && deno task bench",
     "ok": "deno fmt --check && deno lint && deno task test",
-    "ok:dev": "deno fmt --check && deno lint && deno task test:dev"
+    "ok:dev": "deno fmt --check && deno lint && deno task test:dev",
+    "demo:dev": "deno serve -A --watch --env demo_server.tsx"
   },
   "exclude": [
     "/coverage"
   ],
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "dom.asynciterable", "esnext"]
+    "lib": ["dom", "dom.iterable", "dom.asynciterable", "esnext"],
+    "jsx": "precompile",
+    "jsxImportSource": "preact"
   }
 }
