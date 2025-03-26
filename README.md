@@ -4,7 +4,8 @@
 [![CI](https://github.com/iuioiua/redis/actions/workflows/ci.yml/badge.svg)](https://github.com/iuioiua/redis/actions/workflows/ci.yml)
 
 Lightning-fast, lightweight and reliable [Redis](https://redis.io/) client for
-all major JavaScript runtimes.
+all major JavaScript runtimes. Built upon the
+[Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Streams_API).
 
 ```ts
 import { RedisClient } from "@iuioiua/redis";
@@ -55,13 +56,9 @@ do rather than what it does do. It doesn't extend the functionality of a TCP
 connection. It doesn't implement a method for each Redis command, of which there
 are hundreds. Instead, the Redis client consumes a TCP connection, lets the user
 write Redis commands, and returns the parsed result according to the RESP data
-type. It does this using the
-[Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Streams_API) to
-be compatible with all the major JavaScript runtimes; [Bun](https://bun.sh/),
-[Cloudflare Workers](https://workers.cloudflare.com/),
-[Deno](https://deno.com/), [Node.js](https://nodejs.org/en) and web browsers.
-The result is a design with fewer moving parts, fewer bugs, less maintenance,
-and a smaller footprint than other JavaScript implementations of Redis clients.
+type. The result is a design with fewer moving parts, fewer bugs, less
+maintenance, and a smaller footprint than other JavaScript implementations of
+Redis clients.
 
 | Module             | Size (KB) | Dependencies |
 | ------------------ | --------- | ------------ |
