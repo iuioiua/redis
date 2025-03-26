@@ -35,6 +35,7 @@ assertEquals(reply2, "world");
 
 ## Resources
 
+- [Demo](https://iuioiua-redis-demo.deno.dev/)
 - [Documentation](https://jsr.io/@iuioiua/redis/doc)
 - [Contributing guidelines](./CONTRIBUTING.md)
 - [Test coverage](https://iuioiua-redis-coverage.deno.dev/)
