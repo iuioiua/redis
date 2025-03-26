@@ -7,11 +7,11 @@ Lightning-fast, lightweight and reliable [Redis](https://redis.io/) client for
 all major JavaScript runtimes. Built upon the
 [Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Streams_API).
 
-```ts
+```ts ignore
 import { RedisClient } from "@iuioiua/redis";
 import { assertEquals } from "@std/assert/equals";
 
-using redisConn = await Deno.connect({ port: 6379 });
+const redisConn = await Deno.connect({ port: 6379 });
 const redisClient = new RedisClient(redisConn);
 
 const reply1 = await redisClient.sendCommand(["SET", "hello", "world"]);
@@ -70,4 +70,4 @@ footprint than other JavaScript implementations of Redis clients.
 | npm:ioredis        | 894.69    | 10           |
 | npm:redis          | 951.12    | 9            |
 
-> Note: Results were produced using `deno info <module>` on March 9, 2025.
+> Note: Results were produced const `deno info <module>` on March 9, 2025.

@@ -9,7 +9,7 @@ import { concat } from "@std/bytes/concat";
  * import { RedisClient } from "@iuioiua/redis";
  * import { assertEquals } from "@std/assert/equals";
  *
- * using redisConn = await Deno.connect({ port: 6379 });
+ * const redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * const reply1 = await redisClient.sendCommand(["SET", "hello", "world"]);
@@ -183,7 +183,7 @@ async function readReply(
  * import { RedisClient } from "@iuioiua/redis";
  * import { assertEquals } from "@std/assert/equals";
  *
- * using redisConn = await Deno.connect({ port: 6379 });
+ * const redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * const reply1 = await redisClient.sendCommand(["SET", "hello", "world"]);
@@ -204,7 +204,7 @@ async function readReply(
  * import { RedisClient } from "@iuioiua/redis";
  * import { assertEquals } from "@std/assert/equals";
  *
- * using redisConn = await Deno.connect({ port: 6379 });
+ * const redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * // Switch to RESP3
@@ -226,7 +226,7 @@ async function readReply(
  * import { RedisClient } from "@iuioiua/redis";
  * import { assertEquals } from "@std/assert/equals";
  *
- * using redisConn = await Deno.connect({ port: 6379 });
+ * const redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * const data = new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -248,7 +248,7 @@ async function readReply(
  * import { RedisClient } from "@iuioiua/redis";
  * import { deadline } from "jsr:@std/async/deadline";
  *
- * using redisConn = await Deno.connect({ port: 6379 });
+ * const redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * // Rejects with a timeout error if the command takes longer than 100 milliseconds.
@@ -265,10 +265,10 @@ async function readReply(
  * import { RedisClient } from "@iuioiua/redis";
  * import { retry } from "jsr:@std/async/retry";
  *
- * using redisConn = await Deno.connect({ port: 6379 });
+ * const redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
- * // Retries to connect until successful using the exponential backoff algorithm.
+ * // Retries to connect until successful const the exponential backoff algorithm.
  * await retry(() => redisClient.sendCommand(["GET", "foo"]));
  * ```
  *
@@ -282,7 +282,7 @@ async function readReply(
  * import { RedisClient } from "@iuioiua/redis";
  * import { assertEquals } from "@std/assert/equals";
  *
- * using redisConn = await Deno.connect({ port: 6379 });
+ * const redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * const replies = await redisClient.pipelineCommands([
@@ -304,7 +304,7 @@ async function readReply(
  * import { RedisClient } from "@iuioiua/redis";
  * import { assertEquals } from "@std/assert/equals";
  *
- * using redisConn = await Deno.connect({ port: 6379 });
+ * const redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * await redisClient.writeCommand(["SUBSCRIBE", "mychannel"]);
@@ -324,7 +324,7 @@ async function readReply(
  * import { RedisClient } from "@iuioiua/redis";
  * import { assertEquals } from "@std/assert/equals";
  *
- * using redisConn = await Deno.connect({ port: 6379 });
+ * const redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * assertEquals(await redisClient.sendCommand(["MULTI"]), "OK");
@@ -343,7 +343,7 @@ async function readReply(
  * import { RedisClient } from "@iuioiua/redis";
  * import { assertEquals } from "@std/assert/equals";
  *
- * using redisConn = await Deno.connect({ port: 6379 });
+ * const redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * const reply1 = await redisClient.sendCommand(["EVAL", "return ARGV[1]", 0, "hello"]);
@@ -389,7 +389,7 @@ export class RedisClient {
    * import { RedisClient } from "@iuioiua/redis";
    * import { assertEquals } from "@std/assert/equals";
    *
-   * using redisConn = await Deno.connect({ port: 6379 });
+   * const redisConn = await Deno.connect({ port: 6379 });
    * const redisClient = new RedisClient(redisConn);
    *
    * const reply1 = await redisClient.sendCommand(["SET", "hello", "world"]);
@@ -414,7 +414,7 @@ export class RedisClient {
    * import { RedisClient } from "@iuioiua/redis";
    * import { assertEquals } from "@std/assert/equals";
    *
-   * using redisConn = await Deno.connect({ port: 6379 });
+   * const redisConn = await Deno.connect({ port: 6379 });
    * const redisClient = new RedisClient(redisConn);
    *
    * await redisClient.writeCommand(["SUBSCRIBE", "mychannel"]);
@@ -441,7 +441,7 @@ export class RedisClient {
    * import { RedisClient } from "@iuioiua/redis";
    * import { assertEquals } from "@std/assert/equals";
    *
-   * using redisConn = await Deno.connect({ port: 6379 });
+   * const redisConn = await Deno.connect({ port: 6379 });
    * const redisClient = new RedisClient(redisConn);
    *
    * await redisClient.writeCommand(["SUBSCRIBE", "mychannel"]);
@@ -471,7 +471,7 @@ export class RedisClient {
    * import { RedisClient } from "@iuioiua/redis";
    * import { assertEquals } from "@std/assert/equals";
    *
-   * using redisConn = await Deno.connect({ port: 6379 });
+   * const redisConn = await Deno.connect({ port: 6379 });
    * const redisClient = new RedisClient(redisConn);
    *
    * const replies = await redisClient.pipelineCommands([
