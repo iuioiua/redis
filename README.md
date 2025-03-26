@@ -25,6 +25,9 @@ assertEquals(reply2, "world");
 
 - Supports RESPv2, RESP3, raw data, pipelining, pub/sub, transactions and Lua
   scripts.
+- Compatible with all major JavaScript runtimes including
+  [Bun](https://bun.sh/), [Cloudflare Workers](https://workers.cloudflare.com/),
+  [Deno](https://deno.com/) and [Node.js](https://nodejs.org/en).
 - Compatible with timeouts and retries.
 - One of the fastest Redis clients in Deno.
 - Written to be easily understood and debugged.
