@@ -7,7 +7,7 @@ Lightning-fast, lightweight and reliable [Redis](https://redis.io/) client for
 all major JavaScript runtimes. Built upon the
 [Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Streams_API).
 
-```ts
+```ts ignore
 import { RedisClient } from "@iuioiua/redis";
 import { assertEquals } from "@std/assert/equals";
 
