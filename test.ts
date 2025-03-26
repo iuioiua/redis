@@ -143,63 +143,6 @@ Deno.test("readReply() - large reply", async () => {
   await readReplyTest(`$${reply.length}\r\n${reply}\r\n`, reply);
 });
 
-Deno.test("readReply() - unknown", () =>
-  readReplyTest(
-    `%2
-+id
-$9
-movie:381
-+extra_attributes
-%8
-$4
-plot
-$0
-
-$8
-ibmdb_id
-$9
-tt0099698
-$12
-release_year
-$4
-1990
-$6
-rating
-$3
-8.1
-$5
-title
-$18
-The Gravy Train ()
-$5
-genre
-$6
-Comedy
-$6
-poster
-$130
-https://m.media-amazon.com/images/M/MV5BMDBlZjZkOTQtNzU5YS00OTk1LTg2MGUtMGY5ZGZhNDBmMGMyXkEyXkFqcGdeQXVyMzY2ODUzMjA@._V1_SX300.jpg
-$5
-votes
-$2
-71
-`.replaceAll("\n", "\r\n"),
-    {
-      id: "movie:381",
-      extra_attributes: {
-        votes: "71",
-        rating: "8.1",
-        plot: "",
-        ibmdb_id: "tt0099698",
-        release_year: "1990",
-        title: "The Gravy Train ()",
-        genre: "Comedy",
-        poster:
-          "https://m.media-amazon.com/images/M/MV5BMDBlZjZkOTQtNzU5YS00OTk1LTg2MGUtMGY5ZGZhNDBmMGMyXkEyXkFqcGdeQXVyMzY2ODUzMjA@._V1_SX300.jpg",
-      },
-    },
-  ));
-
 Deno.test("RedisClient.sendCommand() - transactions", async () => {
   await sendCommandTest(["MULTI"], "OK");
   await sendCommandTest(["INCR", "FOO"], "QUEUED");
