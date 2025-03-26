@@ -4,7 +4,8 @@
 [![CI](https://github.com/iuioiua/redis/actions/workflows/ci.yml/badge.svg)](https://github.com/iuioiua/redis/actions/workflows/ci.yml)
 
 Lightning-fast, lightweight and reliable [Redis](https://redis.io/) client for
-Bun, Cloudflare Workers, Deno and web browsers.
+all major JavaScript runtimes. Built upon the
+[Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Streams_API).
 
 ```ts
 import { RedisClient } from "@iuioiua/redis";
@@ -24,6 +25,9 @@ assertEquals(reply2, "world");
 
 - Supports RESPv2, RESP3, raw data, pipelining, pub/sub, transactions and Lua
   scripts.
+- Compatible with all major JavaScript runtimes including
+  [Bun](https://bun.sh/), [Cloudflare Workers](https://workers.cloudflare.com/),
+  [Deno](https://deno.com/) and [Node.js](https://nodejs.org/en).
 - Compatible with timeouts and retries.
 - One of the fastest Redis clients in Deno.
 - Written to be easily understood and debugged.
@@ -61,9 +65,9 @@ Redis clients.
 
 | Module             | Size (KB) | Dependencies |
 | ------------------ | --------- | ------------ |
-| jsr:@iuioiua/redis | 25.25     | 5            |
+| jsr:@iuioiua/redis | 17.51     | 3            |
 | jsr:@db/redis      | 214.31    | 34           |
-| npm:ioredis        | 897.71    | 10           |
-| npm:redis          | 968.17    | 9            |
+| npm:ioredis        | 894.69    | 10           |
+| npm:redis          | 951.12    | 9            |
 
-> Note: Results were produced using `deno info <module>` on February 16, 2025.
+> Note: Results were produced using `deno info <module>` on March 9, 2025.
