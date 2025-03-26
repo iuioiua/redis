@@ -80,7 +80,10 @@ Deno.test("readReply() - bulk string containing CRLF (known issue)", () =>
   readReplyTest("$7\r\nhello\r\n\r\n", "hello"));
 
 Deno.test("readReply() - emtpy bulk string", () =>
-  readReplyTest("$0\r\n\r\n", ""));
+  readReplyTest(
+    "%2\r\n$5\r\nempty\r\n$0\r\n\r\n$3\r\nfoo\r\n$3\r\nbar\r\n",
+    { empty: "", foo: "bar" },
+  ));
 
 Deno.test("readReply() - emtpy raw bulk string", () =>
   readReplyTest("$0\r\n\r\n", new Uint8Array(), true));
