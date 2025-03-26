@@ -2,3 +2,4 @@ coverage/
 cov.lcov
 deno.lock
 html_cov/
+.env

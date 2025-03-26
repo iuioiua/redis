@@ -140,16 +140,8 @@ async function readReply(
     case BOOLEAN_PREFIX:
       return parseLine(value) === "t";
     case BULK_STRING_PREFIX:
-    case VERBATIM_STRING_PREFIX: {
-      switch (parseLine(value)) {
-        case "-1":
-          return null;
-        case "0":
-          return raw ? new Uint8Array() : "";
-        default:
-          return readReply(iterator, raw);
-      }
-    }
+    case VERBATIM_STRING_PREFIX:
+      return parseLine(value) === "-1" ? null : readReply(iterator, raw);
     case DOUBLE_PREFIX:
     case INTEGER_PREFIX: {
       switch (parseLine(value)) {
