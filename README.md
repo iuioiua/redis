@@ -55,13 +55,13 @@ return the message, up to that CLRF. The simple workaround for this is to use LF
 ## Design
 
 Like Italian cooking, the design of this package is defined by what it doesn't
-do rather than what it does do. It doesn't extend the functionality of a TCP
-connection. It doesn't implement a method for each Redis command, of which there
-are hundreds. Instead, the Redis client consumes a TCP connection, lets the user
-write Redis commands, and returns the parsed result according to the RESP data
-type. The result is a design with fewer moving parts, fewer bugs, less
-maintenance, and a smaller footprint than other JavaScript implementations of
-Redis clients.
+do rather than what it does do, and relies upon high-quality building blocks. It
+doesn't extend the functionality of a TCP connection. It doesn't implement a
+method for each Redis command, of which there are hundreds. Instead, the Redis
+client consumes a TCP connection, lets the user write Redis commands, and
+returns the parsed result according to the RESP data type. The result is a
+design with fewer moving parts, fewer bugs, less maintenance, and a smaller
+footprint than other JavaScript implementations of Redis clients.
 
 | Module             | Size (KB) | Dependencies |
 | ------------------ | --------- | ------------ |
