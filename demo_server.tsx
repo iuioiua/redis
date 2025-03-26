@@ -1,4 +1,6 @@
 import type { ComponentChildren } from "preact";
+import { render } from "npm:preact-render-to-string";
+import { RedisClient } from "./mod.ts";
 
 // See https://redis.io/learn/howtos/moviesdatabase/import#movies
 export interface Movie {
@@ -146,6 +148,7 @@ function Page(props: { page?: string }) {
         step="1"
         value={props.page}
         placeholder="1"
+        // @ts-ignore It's fine
         onChange="this.form.submit()"
         class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
       />
@@ -153,7 +156,7 @@ function Page(props: { page?: string }) {
   );
 }
 
-export function HomePage(
+function HomePage(
   props: { movies: Movie[]; placeholder?: string; page?: string },
 ) {
   return (
@@ -175,3 +178,54 @@ export function HomePage(
     </html>
   );
 }
+
+const { REDIS_HOST, REDIS_PORT, REDIS_USERNAME, REDIS_PASSWORD } = Deno.env
+  .toObject();
+
+const conn = await Deno.connect({
+  hostname: REDIS_HOST,
+  port: Number(REDIS_PORT),
+});
+const redisClient = new RedisClient(conn);
+
+await redisClient.sendCommand([
+  "HELLO",
+  3,
+  "AUTH",
+  REDIS_USERNAME,
+  REDIS_PASSWORD,
+]);
+
+export default {
+  async fetch(request: Request) {
+    const { pathname, searchParams } = new URL(request.url);
+    if (pathname !== "/") {
+      return new Response("Not found", {
+        status: 404,
+        statusText: "Not found",
+      });
+    }
+
+    const search = searchParams.get("search");
+    const page = searchParams.get("page");
+
+    const reply = await redisClient.sendCommand([
+      "FT.SEARCH",
+      "idx:movie",
+      search || "*",
+      "LIMIT",
+      page ? Number(page) - 1 : 0,
+      10,
+    ]);
+
+    const html = render(HomePage({
+      // deno-lint-ignore no-explicit-any
+      movies: (reply as any)!.results as Movie[],
+      placeholder: search ?? undefined,
+    }));
+
+    return new Response(`<!DOCTYPE html>${html}`, {
+      headers: { "content-type": "text/html" },
+    });
+  },
+};

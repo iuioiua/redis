@@ -18,7 +18,7 @@
     "bench:dev": "deno task redis:start && deno task bench",
     "ok": "deno fmt --check && deno lint && deno task test",
     "ok:dev": "deno fmt --check && deno lint && deno task test:dev",
-    "demo:dev": "deno serve -A --watch --env demo/server.ts"
+    "demo:dev": "deno serve -A --watch --env demo_server.tsx"
   },
   "exclude": [
     "/coverage"
