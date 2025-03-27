@@ -23,15 +23,17 @@ assertEquals(reply2, "world");
 
 ## Features
 
+- Capable of handling 1000s of requests per second.
+- More than 12x smaller than the next major Redis client in Deno.
 - Supports RESPv2, RESP3, raw data, pipelining, pub/sub, transactions and Lua
   scripts.
 - Compatible with all major JavaScript runtimes including
   [Bun](https://bun.sh/), [Cloudflare Workers](https://workers.cloudflare.com/),
   [Deno](https://deno.com/) and [Node.js](https://nodejs.org/en).
+- Cleanly written to be easily understood and debugged.
 - Compatible with timeouts and retries.
-- One of the fastest Redis clients in Deno.
-- Written to be easily understood and debugged.
-- Encourages the use of actual Redis commands without intermediate abstractions.
+- Encourages the use of actual Redis commands without intermediate abstractions,
+  resulting in fewer moving parts.
 
 ## Resources
 
