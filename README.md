@@ -3,8 +3,8 @@
 [![JSR](https://jsr.io/badges/@iuioiua/redis)](https://jsr.io/@iuioiua/redis)
 [![CI](https://github.com/iuioiua/redis/actions/workflows/ci.yml/badge.svg)](https://github.com/iuioiua/redis/actions/workflows/ci.yml)
 
-Lightning-fast, lightweight and reliable [Redis](https://redis.io/) client for
-all major JavaScript runtimes. Built upon the
+Minimal [Redis](https://redis.io/) client for all major JavaScript runtimes.
+Fast, lightweight and built upon the
 [Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Streams_API).
 
 ```ts ignore
