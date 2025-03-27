@@ -29,7 +29,7 @@ assertEquals(reply2, "world");
   scripts.
 - Compatible with all major JavaScript runtimes including
   [Bun](https://bun.sh/), [Cloudflare Workers](https://workers.cloudflare.com/),
-  [Deno](https://deno.com/) and [Node.js](https://nodejs.org/en).
+  [Deno](https://deno.com/), [Node.js](https://nodejs.org/en) and the browser!
 - Cleanly written to be easily understood and debugged.
 - Compatible with timeouts and retries.
 - Encourages the use of actual Redis commands without intermediate abstractions,
