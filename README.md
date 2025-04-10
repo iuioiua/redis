@@ -73,4 +73,4 @@ footprint than other JavaScript implementations of Redis clients.
 | npm:ioredis        | 894.69    | 10           |
 | npm:redis          | 951.12    | 9            |
 
-> Note: Results were produced const `deno info <module>` on March 9, 2025.
+> Note: Results were produced using `deno info <module>` on March 9, 2025.
