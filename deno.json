@@ -20,8 +20,10 @@
     "ok:dev": "deno fmt --check && deno lint && deno task test:dev",
     "demo:dev": "deno serve -A --watch --env demo_server.tsx"
   },
-  "exclude": [
-    "/coverage"
+  "include": [
+    "mod.ts",
+    "deno.json",
+    "README.md"
   ],
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "dom.asynciterable", "esnext"],
