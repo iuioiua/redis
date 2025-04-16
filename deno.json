@@ -11,7 +11,7 @@
     "preact-render-to-string": "npm:preact-render-to-string"
   },
   "tasks": {
-    "redis:check": "test \"$GITHUB_ACTIONS\" != \"true\"",
+    "redis:check": "sh -c 'if [ \"$GITHUB_ACTIONS\" != \"true\" ]; then test \"$GITHUB_ACTIONS\" != \"true\"; fi'",
     "redis:start": "deno task redis:check && redis-server --save \"\" --appendonly no --daemonize yes",
     "redis:stop": "deno task redis:check && redis-cli SHUTDOWN",
     "test": "deno task redis:start && deno test --allow-net --trace-leaks --coverage --doc --parallel --clean ; deno task redis:stop",
