@@ -11,14 +11,12 @@
     "preact-render-to-string": "npm:preact-render-to-string"
   },
   "tasks": {
-    "redis:start": "redis-server --save \"\" --appendonly no --daemonize yes",
-    "test": "deno test --allow-net --trace-leaks --coverage --doc --parallel --clean",
-    "test:dev": "deno task redis:start && deno task test ; redis-cli SHUTDOWN",
-    "bench": "deno bench --allow-net --allow-env",
-    "bench:dev": "deno task redis:start && deno task bench",
+    "redis:start": "sh -c 'if [ \"$GITHUB_ACTIONS\" != \"true\" ]; then redis-server --save \"\" --appendonly no --daemonize yes; fi'",
+    "redis:stop": "sh -c 'if [ \"$GITHUB_ACTIONS\" != \"true\" ]; then redis-cli SHUTDOWN; fi'",
+    "test": "deno task redis:start && deno test --allow-net --trace-leaks --coverage --doc --parallel --clean ; deno task redis:stop",
+    "bench": "deno task redis:start && deno bench --allow-net --allow-env ; deno task redis:stop",
     "ok": "deno fmt --check && deno lint && deno task test",
-    "ok:dev": "deno fmt --check && deno lint && deno task test:dev",
-    "demo:dev": "deno serve -A --watch --env demo_server.tsx"
+    "dev": "deno serve -A --watch --env demo_server.tsx"
   },
   "include": [
     "mod.ts",
