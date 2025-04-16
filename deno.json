@@ -14,7 +14,7 @@
     "redis:start": "sh -c 'if [ \"$GITHUB_ACTIONS\" != \"true\" ]; then redis-server --save \"\" --appendonly no --daemonize yes; fi'",
     "redis:stop": "sh -c 'if [ \"$GITHUB_ACTIONS\" != \"true\" ]; then redis-cli SHUTDOWN; fi'",
     "test": "deno task redis:start && deno test --allow-net --trace-leaks --coverage --doc --parallel --clean ; deno task redis:stop",
-    "bench": "deno task redis:start && deno bench --allow-net --allow-env; deno task redis:stop",
+    "bench": "deno task redis:start && deno bench --allow-net --allow-env ; deno task redis:stop",
     "ok": "deno fmt --check && deno lint && deno task test",
     "dev": "deno serve -A --watch --env demo_server.tsx"
   },
