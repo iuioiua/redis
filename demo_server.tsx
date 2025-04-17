@@ -1,5 +1,5 @@
 import { render } from "npm:preact-render-to-string";
-import { RedisClient } from "./mod.ts";
+import { RedisClient } from "@iuioiua/redis";
 
 interface SearchReply {
   total_results: number;
