@@ -3,9 +3,8 @@
 [![JSR](https://jsr.io/badges/@iuioiua/redis)](https://jsr.io/@iuioiua/redis)
 [![CI](https://github.com/iuioiua/redis/actions/workflows/ci.yml/badge.svg)](https://github.com/iuioiua/redis/actions/workflows/ci.yml)
 
-Minimal [Redis](https://redis.io/) client for all major JavaScript runtimes,
-including the browser. Fast, lightweight and built upon the
-[Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Streams_API).
+Fast, lightweight [Redis](https://redis.io/) client built upon the
+[Web Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Streams_API).
 
 ```ts ignore
 import { RedisClient } from "@iuioiua/redis";
