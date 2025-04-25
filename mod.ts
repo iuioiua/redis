@@ -1,5 +1,4 @@
 // deno-lint-ignore-file no-explicit-any
-import { chunk } from "@std/collections/chunk";
 import { concat } from "@std/bytes/concat";
 
 /**
@@ -112,6 +111,22 @@ function parseLine(value: Uint8Array): string {
   return decoder.decode(value.slice(1));
 }
 
+/**
+ * Chunks an array into smaller arrays of two elements each. Used for map
+ * replies which are returned as a flat array of key-value pairs.
+ *
+ * @param array The array to chunk
+ * @returns An array of arrays, each containing two elements from the original
+ * array.
+ */
+function chunk<T>(array: readonly T[]): T[][] {
+  const result: T[][] = [];
+  for (let i = 0; i < array.length; i += 2) {
+    result.push(array.slice(i, i + 2));
+  }
+  return result;
+}
+
 async function readReply(
   iterator: AsyncIterableIterator<Uint8Array>,
   raw = false,
@@ -158,7 +173,7 @@ async function readReply(
     case MAP_PREFIX: {
       const length = Number(parseLine(value)) * 2;
       const array = await readNReplies(iterator, length);
-      return Object.fromEntries(chunk(array, 2));
+      return Object.fromEntries(chunk(array));
     }
     case NULL_PREFIX:
       return null;
