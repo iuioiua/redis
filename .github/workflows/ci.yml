@@ -28,11 +28,8 @@ jobs:
       - name: Setup Deno
         uses: denoland/setup-deno@v2
 
-      - name: Verify formatting, run linter and run tests
+      - name: Verify formatting, run linter and run tests with coverage
         run: deno task ok
-
-      - name: Build coverage explorer
-        run: deno coverage --html
 
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
