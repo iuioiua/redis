@@ -4,11 +4,11 @@ import { concat } from "@std/bytes/concat";
 /**
  * A Redis client for interacting with a Redis server.
  *
- * ```ts ignore
+ * ```ts
  * import { RedisClient } from "@iuioiua/redis";
  * import { assertEquals } from "@std/assert/equals";
  *
- * const redisConn = await Deno.connect({ port: 6379 });
+ * using redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * const reply1 = await redisClient.sendCommand(["SET", "hello", "world"]);
@@ -194,11 +194,11 @@ async function readReply(
  *
  * @example Send RESPv2 commands
  *
- * ```ts ignore
+ * ```ts
  * import { RedisClient } from "@iuioiua/redis";
  * import { assertEquals } from "@std/assert/equals";
  *
- * const redisConn = await Deno.connect({ port: 6379 });
+ * using redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * const reply1 = await redisClient.sendCommand(["SET", "hello", "world"]);
@@ -215,11 +215,11 @@ async function readReply(
  * by sending a {@link https://redis.io/docs/latest/commands/hello/ | HELLO}
  * command with the version number 3.
  *
- * ```ts ignore
+ * ```ts
  * import { RedisClient } from "@iuioiua/redis";
  * import { assertEquals } from "@std/assert/equals";
  *
- * const redisConn = await Deno.connect({ port: 6379 });
+ * using redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * // Switch to RESP3
@@ -237,11 +237,11 @@ async function readReply(
  * Receive raw data by setting the `raw` parameter to `true` for your given
  * method. This functionality is exclusive to bulk string replies.
  *
- * ```ts ignore
+ * ```ts
  * import { RedisClient } from "@iuioiua/redis";
  * import { assertEquals } from "@std/assert/equals";
  *
- * const redisConn = await Deno.connect({ port: 6379 });
+ * using redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * const data = new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -259,11 +259,11 @@ async function readReply(
  * {@linkcode https://jsr.io/@std/async/doc/~/deadline | deadline()} for more
  * information. This function can be applied to any asynchronous operation.
  *
- * ```ts ignore
+ * ```ts
  * import { RedisClient } from "@iuioiua/redis";
  * import { deadline } from "jsr:@std/async/deadline";
  *
- * const redisConn = await Deno.connect({ port: 6379 });
+ * using redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * // Rejects with a timeout error if the command takes longer than 100 milliseconds.
@@ -276,11 +276,11 @@ async function readReply(
  * {@linkcode https://jsr.io/@std/async/doc/~/retry | retry()} for more
  * information. This function can be applied to any asynchronous operation.
  *
- * ```ts ignore
+ * ```ts
  * import { RedisClient } from "@iuioiua/redis";
  * import { retry } from "jsr:@std/async/retry";
  *
- * const redisConn = await Deno.connect({ port: 6379 });
+ * using redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * // Retries to connect until successful const the exponential backoff algorithm.
@@ -293,11 +293,11 @@ async function readReply(
  * {@link https://redis.io/docs/latest/develop/use/pipelining/ | Redis pipelining}
  * for more information.
  *
- * ```ts ignore
+ * ```ts
  * import { RedisClient } from "@iuioiua/redis";
  * import { assertEquals } from "@std/assert/equals";
  *
- * const redisConn = await Deno.connect({ port: 6379 });
+ * using redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * const replies = await redisClient.pipelineCommands([
@@ -315,11 +315,11 @@ async function readReply(
  * {@link https://redis.io/docs/latest/develop/interact/pubsub/ | Redis Pub/Sub}
  * for more information.
  *
- * ```ts ignore
+ * ```ts
  * import { RedisClient } from "@iuioiua/redis";
  * import { assertEquals } from "@std/assert/equals";
  *
- * const redisConn = await Deno.connect({ port: 6379 });
+ * using redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * await redisClient.writeCommand(["SUBSCRIBE", "mychannel"]);
@@ -335,11 +335,11 @@ async function readReply(
  * See {@link https://redis.io/docs/latest/develop/interact/transactions/ | Transactions}
  * for more information.
  *
- * ```ts ignore
+ * ```ts
  * import { RedisClient } from "@iuioiua/redis";
  * import { assertEquals } from "@std/assert/equals";
  *
- * const redisConn = await Deno.connect({ port: 6379 });
+ * using redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * assertEquals(await redisClient.sendCommand(["MULTI"]), "OK");
@@ -354,11 +354,11 @@ async function readReply(
  * {@link https://redis.io/docs/latest/develop/interact/programmability/eval-intro/ | Scripting with Lua}
  * for more information.
  *
- * ```ts ignore
+ * ```ts
  * import { RedisClient } from "@iuioiua/redis";
  * import { assertEquals } from "@std/assert/equals";
  *
- * const redisConn = await Deno.connect({ port: 6379 });
+ * using redisConn = await Deno.connect({ port: 6379 });
  * const redisClient = new RedisClient(redisConn);
  *
  * const reply1 = await redisClient.sendCommand(["EVAL", "return ARGV[1]", 0, "hello"]);
@@ -367,11 +367,11 @@ async function readReply(
  * const reply2 = await redisClient.sendCommand([
  *   "FUNCTION",
  *   "LOAD",
- *   "#!lua name=mylib\nredis.register_function('knockknock', function() return 'Who\\'s there?' end)",
+ *   "#!lua name=myfunc\nredis.register_function('knock_knock', function() return 'Who\\'s there?' end)",
  * ]);
- * assertEquals(reply2, "mylib");
+ * assertEquals(reply2, "myfunc");
  *
- * const reply3 = await redisClient.sendCommand(["FCALL", "knockknock", 0]);
+ * const reply3 = await redisClient.sendCommand(["FCALL", "knock_knock", 0]);
  * assertEquals(reply3, "Who's there?");
  * ```
  */
@@ -400,11 +400,11 @@ export class RedisClient {
    *
    * @example Basic usage
    *
-   * ```ts ignore
+   * ```ts
    * import { RedisClient } from "@iuioiua/redis";
    * import { assertEquals } from "@std/assert/equals";
    *
-   * const redisConn = await Deno.connect({ port: 6379 });
+   * using redisConn = await Deno.connect({ port: 6379 });
    * const redisClient = new RedisClient(redisConn);
    *
    * const reply1 = await redisClient.sendCommand(["SET", "hello", "world"]);
@@ -425,11 +425,11 @@ export class RedisClient {
    * Writes a command to the Redis server without listening for a reply.
    *
    * @example Basic usage
-   * ```ts ignore
+   * ```ts
    * import { RedisClient } from "@iuioiua/redis";
    * import { assertEquals } from "@std/assert/equals";
    *
-   * const redisConn = await Deno.connect({ port: 6379 });
+   * using redisConn = await Deno.connect({ port: 6379 });
    * const redisClient = new RedisClient(redisConn);
    *
    * await redisClient.writeCommand(["SUBSCRIBE", "mychannel"]);
@@ -452,11 +452,11 @@ export class RedisClient {
    * for more information.
    *
    * @example Basic usage
-   * ```ts ignore
+   * ```ts
    * import { RedisClient } from "@iuioiua/redis";
    * import { assertEquals } from "@std/assert/equals";
    *
-   * const redisConn = await Deno.connect({ port: 6379 });
+   * using redisConn = await Deno.connect({ port: 6379 });
    * const redisClient = new RedisClient(redisConn);
    *
    * await redisClient.writeCommand(["SUBSCRIBE", "mychannel"]);
@@ -482,18 +482,18 @@ export class RedisClient {
    *
    * @example Basic usage
    *
-   * ```ts ignore
+   * ```ts
    * import { RedisClient } from "@iuioiua/redis";
    * import { assertEquals } from "@std/assert/equals";
    *
-   * const redisConn = await Deno.connect({ port: 6379 });
+   * using redisConn = await Deno.connect({ port: 6379 });
    * const redisClient = new RedisClient(redisConn);
    *
    * const replies = await redisClient.pipelineCommands([
-   *   ["INCR", "Y"],
-   *   ["INCR", "Y"],
-   *   ["INCR", "Y"],
-   *   ["INCR", "Y"],
+   *   ["INCR", "A"],
+   *   ["INCR", "A"],
+   *   ["INCR", "A"],
+   *   ["INCR", "A"],
    * ]);
    * assertEquals(replies, [1, 2, 3, 4]);
    * ```

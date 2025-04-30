@@ -6,11 +6,11 @@
 Fast, lightweight [Redis](https://redis.io/) client built upon the
 [Web Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Streams_API).
 
-```ts ignore
+```ts
 import { RedisClient } from "@iuioiua/redis";
 import { assertEquals } from "@std/assert/equals";
 
-const redisConn = await Deno.connect({ port: 6379 });
+using redisConn = await Deno.connect({ port: 6379 });
 const redisClient = new RedisClient(redisConn);
 
 const reply1 = await redisClient.sendCommand(["SET", "hello", "world"]);
