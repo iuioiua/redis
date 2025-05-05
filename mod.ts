@@ -498,7 +498,10 @@ export class RedisClient {
    * assertEquals(replies, [1, 2, 3, 4]);
    * ```
    */
-  pipelineCommands(commands: Command[], raw = false): Promise<Reply[]> {
+  pipelineCommands(
+    commands: readonly Command[],
+    raw = false,
+  ): Promise<Reply[]> {
     return this.#enqueue(() => {
       const bytes = concat(commands.map(createRequest));
       this.#writer.write(bytes);
