@@ -22,7 +22,7 @@ import { concat } from "@std/bytes/concat";
  */
 
 /** Command sent to a Redis server. */
-export type Command = (string | number | Uint8Array)[];
+export type Command = readonly (string | number | Uint8Array)[];
 /** Reply received from a Redis server and triggered by a command. */
 export type Reply =
   | string
@@ -31,7 +31,7 @@ export type Reply =
   | boolean
   | bigint
   | Record<string, any>
-  | Reply[];
+  | readonly Reply[];
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -381,7 +381,7 @@ export class RedisClient {
   #queue: Promise<any> = Promise.resolve();
 
   constructor(
-    conn: {
+    readonly conn: {
       readable: ReadableStream<Uint8Array>;
       writable: WritableStream<Uint8Array>;
     },
