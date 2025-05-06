@@ -52,6 +52,8 @@ function HomePage(
               </div>
             </div>
 
+            <input type="submit" hidden />
+
             <a
               href="/"
               class="rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 shadow-xs hover:bg-red-100"
@@ -134,7 +136,7 @@ function HomePage(
             name="page"
             type="number"
             min="1"
-            max={Math.ceil(props.reply.total_results / RESULTS_PER_PAGE)}
+            max={Math.ceil(props.reply.total_results / RESULTS_PER_PAGE) || 1}
             // @ts-ignore It's fine
             maxlength="2"
             value={props.searchParams.get("page") || 1}
