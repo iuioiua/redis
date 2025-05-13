@@ -43,7 +43,7 @@
     },
     "dev": {
       "description": "Run the demo server in watch mode",
-      "command": "deno run -A --watch --unstable --no-check demo_server.tsx"
+      "command": "deno serve -A --watch --env demo_server.tsx"
     }
   },
   "compilerOptions": {

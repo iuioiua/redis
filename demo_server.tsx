@@ -1,4 +1,4 @@
-import { render } from "npm:preact-render-to-string";
+import { renderToStringAsync } from "npm:preact-render-to-string";
 import { RedisClient } from "@iuioiua/redis";
 
 interface SearchReply {
@@ -203,7 +203,7 @@ export default {
       RESULTS_PER_PAGE,
     ]) as SearchReply;
 
-    const html = render(HomePage({
+    const html = await renderToStringAsync(HomePage({
       reply,
       searchParams,
     }));
