@@ -380,6 +380,13 @@ export class RedisClient {
   #lines: AsyncIterableIterator<Uint8Array>;
   #queue: Promise<any> = Promise.resolve();
 
+  /**
+   * Constructs a new instance.
+   *
+   * @param conn The connection to the Redis server. This should be a
+   * {@linkcode ReadableStream} and {@linkcode WritableStream} pair, such as the
+   * one returned by {@linkcode Deno.connect}.
+   */
   constructor(
     readonly conn: {
       readable: ReadableStream<Uint8Array>;
@@ -397,6 +404,23 @@ export class RedisClient {
 
   /**
    * Sends a command to the Redis server and returns the reply.
+   *
+   * @param command The command to send to the Redis server. This should be an
+   * array of arguments, where the first argument is the command name and the
+   * remaining arguments are the command's arguments. For the list of commands,
+   * see {@link https://redis.io/docs/latest/commands/ | Redis commands}.
+   * @param raw If `true`, the reply will be returned as a raw
+   * {@linkcode Uint8Array}. This is useful for commands that return binary
+   * data, such as {@linkcode https://redis.io/docs/latest/commands/get/ | GET}.
+   * The default is `false`, which returns the reply as a JavaScript value.
+   *
+   * @returns The reply from the Redis server. This can be a string, number,
+   * boolean, null, or an array of replies. The type of the reply depends on the
+   * command sent. For example, the
+   * {@linkcode https://redis.io/docs/latest/commands/get/ | GET} command
+   * returns a string, while the
+   * {@linkcode https://redis.io/docs/latest/commands/mget/ | MGET} command
+   * returns an array of strings.
    *
    * @example Basic usage
    *
@@ -424,6 +448,11 @@ export class RedisClient {
   /**
    * Writes a command to the Redis server without listening for a reply.
    *
+   * @param command The command to send to the Redis server. This should be an
+   * array of arguments, where the first argument is the command name and the
+   * remaining arguments are the command's arguments. For the list of commands,
+   * see {@link https://redis.io/docs/latest/commands/ | Redis commands}.
+   *
    * @example Basic usage
    * ```ts
    * import { RedisClient } from "@iuioiua/redis";
@@ -450,6 +479,20 @@ export class RedisClient {
    * See
    * {@link https://redis.io/docs/latest/develop/interact/pubsub/ | Redis Pub/Sub}
    * for more information.
+   *
+   * @param raw If `true`, the reply will be yield as a raw
+   * {@linkcode Uint8Array}. This is useful for commands that return binary
+   * data, such as {@linkcode https://redis.io/docs/latest/commands/get/ | GET}.
+   * The default is `false`, which returns the reply as a JavaScript value.
+   *
+   * @returns An async iterable iterator that yields replies from the Redis
+   * server. The replies can be of various types, including strings, numbers,
+   * booleans, null, and arrays of replies. The type of the reply depends on
+   * the command sent. For example, the
+   * {@linkcode https://redis.io/docs/latest/commands/get/ | GET} command
+   * returns a string, while the
+   * {@linkcode https://redis.io/docs/latest/commands/mget/ | MGET} command
+   * returns an array of strings.
    *
    * @example Basic usage
    * ```ts
@@ -479,6 +522,25 @@ export class RedisClient {
    * See
    * {@link https://redis.io/docs/latest/develop/use/pipelining/ | Redis pipelining}
    * for more information.
+   *
+   * @param commands The array of commands to send to the Redis server. Each
+   * command should be an array of arguments, where the first argument is the
+   * command name and the remaining arguments are the command's arguments. For
+   * the list of commands, see
+   * {@link https://redis.io/docs/latest/commands/ | Redis commands}.
+   * @param raw If `true`, the reply will be yield as a raw
+   * {@linkcode Uint8Array}. This is useful for commands that return binary
+   * data, such as {@linkcode https://redis.io/docs/latest/commands/get/ | GET}.
+   * The default is `false`, which returns the reply as a JavaScript value.
+   *
+   * @returns An array of replies from the Redis server. The replies can be of
+   * various types, including strings, numbers, booleans, null, and arrays of
+   * replies. The type of the reply depends on the command sent. For example,
+   * the
+   * {@linkcode https://redis.io/docs/latest/commands/get/ | GET} command
+   * returns a string, while the
+   * {@linkcode https://redis.io/docs/latest/commands/mget/ | MGET} command
+   * returns an array of strings.
    *
    * @example Basic usage
    *
