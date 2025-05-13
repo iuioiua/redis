@@ -28,7 +28,7 @@ jobs:
       - name: Setup Deno
         uses: denoland/setup-deno@v2
 
-      - name: Verify formatting, run linter and run tests with coverage
+      - name: Check formatting, linting and run tests
         run: deno task ok
 
       - name: Upload to Deno Deploy

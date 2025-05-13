@@ -11,12 +11,40 @@
     "preact-render-to-string": "npm:preact-render-to-string"
   },
   "tasks": {
-    "redis:start": "sh -c 'if [ \"$GITHUB_ACTIONS\" != \"true\" ]; then redis-server --save \"\" --appendonly no --daemonize yes; fi'",
-    "redis:stop": "sh -c 'if [ \"$GITHUB_ACTIONS\" != \"true\" ]; then redis-cli SHUTDOWN; fi'",
-    "test": "deno task redis:start && deno test --allow-net --trace-leaks --coverage --doc --parallel --clean ; deno task redis:stop",
-    "bench": "deno task redis:start && deno bench --allow-net --allow-env ; deno task redis:stop",
-    "ok": "deno fmt --check && deno lint && deno task test",
-    "dev": "deno serve -A --watch --env demo_server.tsx"
+    "redis:start": {
+      "description": "Start Redis server",
+      "command": "sh -c 'if [ \"$GITHUB_ACTIONS\" != \"true\" ]; then redis-server --save \"\" --appendonly no --daemonize yes; fi'"
+    },
+    "redis:stop": {
+      "description": "Stop Redis server",
+      "command": "sh -c 'if [ \"$GITHUB_ACTIONS\" != \"true\" ]; then redis-cli SHUTDOWN; fi'"
+    },
+    "test": {
+      "description": "Run tests",
+      "command": "deno test --allow-net --trace-leaks --coverage --doc --parallel --clean ; deno task redis:stop",
+      "dependencies": ["redis:start"]
+    },
+    "bench": {
+      "description": "Run benchmarks",
+      "command": "deno bench --allow-net --allow-env ; deno task redis:stop",
+      "dependencies": ["redis:start"]
+    },
+    "check:fmt": {
+      "description": "Check formatting",
+      "command": "deno fmt --check"
+    },
+    "check:lint": {
+      "description": "Check linting",
+      "command": "deno lint"
+    },
+    "ok": {
+      "description": "Checks formatting, linting and runs tests",
+      "dependencies": ["check:fmt", "check:lint", "test"]
+    },
+    "dev": {
+      "description": "Run the demo server in watch mode",
+      "command": "deno run -A --watch --unstable --no-check demo_server.tsx"
+    }
   },
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "dom.asynciterable", "esnext"],
