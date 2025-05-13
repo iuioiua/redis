@@ -21,9 +21,22 @@ import { concat } from "@std/bytes/concat";
  * @module
  */
 
-/** Command sent to a Redis server. */
+/**
+ * The command to send to the Redis server. This should be an
+ * array of arguments, where the first argument is the command name and the
+ * remaining arguments are the command's arguments. For the list of commands,
+ * see {@link https://redis.io/docs/latest/commands/ | Redis commands}.
+ */
 export type Command = readonly (string | number | Uint8Array)[];
-/** Reply received from a Redis server and triggered by a command. */
+/**
+ * The reply from the Redis server. This can be a string, number,
+ * boolean, null, or an array of replies. The type of the reply depends on the
+ * command sent. For example, the
+ * {@linkcode https://redis.io/docs/latest/commands/get/ | GET} command
+ * returns a string, while the
+ * {@linkcode https://redis.io/docs/latest/commands/mget/ | MGET} command
+ * returns an array of strings.
+ */
 export type Reply =
   | string
   | number
