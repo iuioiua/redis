@@ -103,7 +103,7 @@ async function* readLines(
     chunks = concat([chunks, chunk]) as Uint8Array<ArrayBufferLike>;
     let index;
     while (
-      (index = chunks.indexOf(CRLF_BYTES[0])) !== -1 &&
+      (index = chunks.indexOf(CRLF_BYTES[0]!)) !== -1 &&
       chunks[index + 1] === CRLF_BYTES[1]
     ) {
       yield chunks.subarray(0, index);
@@ -401,7 +401,7 @@ export class RedisClient {
    * one returned by {@linkcode Deno.connect}.
    */
   constructor(
-    readonly conn: {
+    conn: {
       readable: ReadableStream<Uint8Array>;
       writable: WritableStream<Uint8Array>;
     },

@@ -49,6 +49,11 @@
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "dom.asynciterable", "esnext"],
     "jsx": "precompile",
-    "jsxImportSource": "preact"
+    "jsxImportSource": "preact",
+    "erasableSyntaxOnly": true,
+    "exactOptionalPropertyTypes": true,
+    "useUnknownInCatchVariables": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true
   }
 }

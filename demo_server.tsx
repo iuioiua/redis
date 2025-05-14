@@ -1,4 +1,4 @@
-import { renderToStringAsync } from "npm:preact-render-to-string";
+import { renderToStringAsync } from "preact-render-to-string";
 import { RedisClient } from "@iuioiua/redis";
 
 interface SearchReply {
@@ -165,8 +165,19 @@ function HomePage(
   );
 }
 
+function assertEnv(key?: string): asserts key is string {
+  if (key === undefined) {
+    throw new Error(`Missing environment variable: ${key}`);
+  }
+}
+
 const { REDIS_HOST, REDIS_PORT, REDIS_USERNAME, REDIS_PASSWORD } = Deno.env
   .toObject();
+
+assertEnv(REDIS_HOST);
+assertEnv(REDIS_PORT);
+assertEnv(REDIS_USERNAME);
+assertEnv(REDIS_PASSWORD);
 
 const conn = await Deno.connect({
   hostname: REDIS_HOST,
