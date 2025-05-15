@@ -6,9 +6,7 @@
   "imports": {
     "@std/assert": "jsr:@std/assert@^1.0.12",
     "@std/bytes": "jsr:@std/bytes@^1.0.5",
-    "@std/streams": "jsr:@std/streams@^1.0.9",
-    "preact": "npm:preact",
-    "preact-render-to-string": "npm:preact-render-to-string"
+    "@std/streams": "jsr:@std/streams@^1.0.9"
   },
   "tasks": {
     "redis:start": {
@@ -43,13 +41,11 @@
     },
     "dev": {
       "description": "Run the demo server in watch mode",
-      "command": "deno serve -A --watch --env demo_server.tsx"
+      "command": "deno serve -A --watch --env demo_server.ts"
     }
   },
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "dom.asynciterable", "esnext"],
-    "jsx": "precompile",
-    "jsxImportSource": "preact",
     "erasableSyntaxOnly": true,
     "exactOptionalPropertyTypes": true,
     "useUnknownInCatchVariables": true,
