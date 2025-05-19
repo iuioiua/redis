@@ -27,6 +27,8 @@ jobs:
 
       - name: Setup Deno
         uses: denoland/setup-deno@v2
+        with:
+          cache: true
 
       - name: Check formatting, linting and run tests
         run: deno task ok
