@@ -95,10 +95,8 @@ function createRequest(command: Command): Uint8Array {
   return concat(lines);
 }
 
-async function* readLines(
-  readable: ReadableStream<Uint8Array<ArrayBufferLike>>,
-) {
-  let chunks: Uint8Array<ArrayBufferLike> = new Uint8Array();
+async function* readLines(readable: ReadableStream<Uint8Array>) {
+  let chunks: Uint8Array = new Uint8Array();
   for await (const chunk of readable) {
     chunks = concat([chunks, chunk]) as Uint8Array<ArrayBufferLike>;
     let index;
