@@ -32,10 +32,3 @@ jobs:
 
       - name: Check formatting, linting and run tests
         run: deno task ok
-
-      - name: Upload to Deno Deploy
-        uses: denoland/deployctl@v1
-        with:
-          project: iuioiua-redis-coverage
-          entrypoint: jsr:@std/http/file-server
-          root: coverage/html
