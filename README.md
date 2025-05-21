@@ -39,7 +39,7 @@ assertEquals(reply2, "world");
 - [Demo](https://redis.iuioiua.deno.net/)
 - [Documentation](https://jsr.io/@iuioiua/redis/doc)
 - [Contributing guidelines](./CONTRIBUTING.md)
-- [Test coverage](https://iuioiua-redis-coverage.deno.dev/)
+- [Test coverage](https://redis-coverage.iuioiua.deno.net/)
 
 ## Known issues
 
