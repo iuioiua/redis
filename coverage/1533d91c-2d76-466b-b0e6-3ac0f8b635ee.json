@@ -1,0 +1,16 @@
+{
+  "scriptId": "334",
+  "url": "file:///Users/asher/GitHub/redis/mod.ts$273-283.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [{ "startOffset": 0, "endOffset": 451, "count": 1 }],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [{ "startOffset": 162, "endOffset": 448, "count": 1 }],
+      "isBlockCoverage": true
+    }
+  ]
+}

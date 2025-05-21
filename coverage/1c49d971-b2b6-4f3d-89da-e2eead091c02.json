@@ -1,0 +1,16 @@
+{
+  "scriptId": "334",
+  "url": "file:///Users/asher/GitHub/redis/README.md$9-22.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [{ "startOffset": 0, "endOffset": 521, "count": 1 }],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [{ "startOffset": 161, "endOffset": 518, "count": 1 }],
+      "isBlockCoverage": true
+    }
+  ]
+}
