@@ -200,34 +200,34 @@ await redisClient.sendCommand([
   REDIS_PASSWORD,
 ]);
 
-export default {
-  async fetch(request: Request) {
-    const { pathname, searchParams } = new URL(request.url);
-    if (pathname !== "/") {
-      return new Response("Not found", {
-        status: 404,
-        statusText: "Not found",
-      });
-    }
-
-    const page = searchParams.get("page");
-
-    const reply = await redisClient.sendCommand([
-      "FT.SEARCH",
-      "idx:movie",
-      searchParams.get("search") || "*",
-      "LIMIT",
-      page ? Number(page) - 1 : 0,
-      RESULTS_PER_PAGE,
-    ]) as SearchReply;
-
-    const homePage = renderHomePage({
-      reply,
-      searchParams,
+async function handler(request: Request): Promise<Response> {
+  const { pathname, searchParams } = new URL(request.url);
+  if (pathname !== "/") {
+    return new Response("Not found", {
+      status: 404,
+      statusText: "Not found",
     });
+  }
 
-    return new Response(homePage, {
-      headers: { "content-type": "text/html" },
-    });
-  },
-};
+  const page = searchParams.get("page");
+
+  const reply = await redisClient.sendCommand([
+    "FT.SEARCH",
+    "idx:movie",
+    searchParams.get("search") || "*",
+    "LIMIT",
+    page ? Number(page) - 1 : 0,
+    RESULTS_PER_PAGE,
+  ]) as SearchReply;
+
+  const homePage = renderHomePage({
+    reply,
+    searchParams,
+  });
+
+  return new Response(homePage, {
+    headers: { "content-type": "text/html" },
+  });
+}
+
+Deno.serve(handler);
