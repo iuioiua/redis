@@ -1,5 +1,4 @@
 // deno-lint-ignore-file no-explicit-any
-import { concat } from "@std/bytes/concat";
 
 /**
  * A Redis client for interacting with a Redis server.
@@ -89,6 +88,20 @@ const BULK_STRING_PREFIX_BYTES = encoder.encode("$");
  * ```
  */
 export class RedisError extends Error {}
+
+function concat(buffers: readonly Uint8Array[]): Uint8Array {
+  let length = 0;
+  for (const buffer of buffers) {
+    length += buffer.length;
+  }
+  const output = new Uint8Array(length);
+  let index = 0;
+  for (const buffer of buffers) {
+    output.set(buffer, index);
+    index += buffer.length;
+  }
+  return output;
+}
 
 /**
  * Transforms a command, which is an array of arguments, into an RESP request.

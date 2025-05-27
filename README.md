@@ -67,9 +67,9 @@ footprint than other JavaScript implementations of Redis clients.
 
 | Module             | Size (KB) | Dependencies |
 | ------------------ | --------- | ------------ |
-| jsr:@iuioiua/redis | 16.45     | 2            |
+| jsr:@iuioiua/redis | 20.03     | 0            |
 | jsr:@db/redis      | 214.31    | 34           |
 | npm:ioredis        | 898.03    | 10           |
 | npm:redis          | 968.17    | 9            |
 
-> Note: Results were produced using `deno info <module>` on May 5, 2025.
+> Note: Results were produced using `deno info <module>` on May 28, 2025.
