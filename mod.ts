@@ -132,7 +132,7 @@ function createRequest(command: Command): Uint8Array {
 async function* readLines(readable: ReadableStream<Uint8Array>) {
   let chunks: Uint8Array = new Uint8Array();
   for await (const chunk of readable) {
-    chunks = concat([chunks, chunk]) as Uint8Array<ArrayBufferLike>;
+    chunks = concat([chunks, chunk]);
     let index;
     while (
       (index = chunks.indexOf(CRLF_BYTES[0]!)) !== -1 &&
