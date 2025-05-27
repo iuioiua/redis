@@ -70,6 +70,27 @@ const ARRAY_PREFIX_BYTES = encoder.encode("*");
 const BULK_STRING_PREFIX_BYTES = encoder.encode("$");
 
 /**
+ * Error thrown when a Redis reply is an error. Only thrown for commands that
+ * return an error reply.
+ *
+ * @example Basic usage
+ * ```ts
+ * import { RedisClient, RedisError } from "@iuioiua/redis";
+ * import { assertRejects } from "@std/assert/rejects";
+ *
+ * using redisConn = await Deno.connect({ port: 6379 });
+ * const redisClient = new RedisClient(redisConn);
+ *
+ * await assertRejects(
+ *   () => redisClient.sendCommand(["Error", "This is a Redis error"]),
+ *   RedisError,
+ *   "ERR unknown command 'Error', with args beginning with: 'This is a Redis error' ",
+ * );
+ * ```
+ */
+export class RedisError extends Error {}
+
+/**
  * Transforms a command, which is an array of arguments, into an RESP request.
  *
  * @see {@link https://redis.io/docs/reference/protocol-spec/#send-commands-to-a-redis-server}
@@ -161,7 +182,7 @@ async function readReply(
     case BLOB_ERROR_PREFIX: {
       // Skip to reading the next line, which is a string
       const { value } = await iterator.next();
-      return Promise.reject(decoder.decode(value));
+      return Promise.reject(new RedisError(decoder.decode(value)));
     }
     case BOOLEAN_PREFIX:
       return parseLine(value) === "t";
@@ -180,7 +201,7 @@ async function readReply(
       }
     }
     case ERROR_PREFIX:
-      return Promise.reject(parseLine(value));
+      return Promise.reject(new RedisError(parseLine(value)));
     case MAP_PREFIX: {
       const length = Number(parseLine(value)) * 2;
       const array = await readNReplies(iterator, length);
