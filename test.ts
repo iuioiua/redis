@@ -1,24 +1,31 @@
 /// <reference lib="deno.ns" />
 import { assertEquals, assertRejects } from "@std/assert";
-import { Buffer } from "@std/streams/buffer";
 import { type Command, RedisClient, type Reply } from "./mod.ts";
 
 const redisConn = await Deno.connect({ port: 6379 });
 const redisClient = new RedisClient(redisConn);
-const encoder = new TextEncoder();
+
+function createConn(output: string) {
+  return {
+    readable: ReadableStream.from([output]).pipeThrough(
+      new TextEncoderStream(),
+    ),
+    writable: new WritableStream(),
+  };
+}
 
 async function sendCommandTest(command: Command, expected: Reply) {
   assertEquals(await redisClient.sendCommand(command), expected);
 }
 
 async function readReplyTest(output: string, expected: Reply, raw = false) {
-  const redisClient = new RedisClient(new Buffer(encoder.encode(output)));
+  const redisClient = new RedisClient(createConn(output));
   const { value } = await redisClient.readReplies(raw).next();
   assertEquals(value, expected);
 }
 
 function readReplyRejectTest(output: string, expected: string) {
-  const redisClient = new RedisClient(new Buffer(encoder.encode(output)));
+  const redisClient = new RedisClient(createConn(output));
   return assertRejects(
     () => redisClient.readReplies().next(),
     expected,
