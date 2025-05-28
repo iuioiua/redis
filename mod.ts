@@ -1,5 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
-
 /**
  * The command to send to the Redis server. This should be an
  * array of arguments, where the first argument is the command name and the
@@ -23,8 +21,19 @@ export type Reply =
   | boolean
   | bigint
   | Uint8Array<ArrayBuffer>
-  | Record<string, any>
+  | Set<Reply>
+  | RedisObject
   | readonly Reply[];
+
+/**
+ * A Redis object, which is a key-value store where the keys are strings and
+ * the values are Redis replies. This is used for commands that return a map
+ * of key-value pairs, such as the
+ * {@linkcode https://redis.io/docs/latest/commands/hgetall/ | HGETALL} command.
+ */
+export interface RedisObject {
+  [key: string]: Reply;
+}
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
