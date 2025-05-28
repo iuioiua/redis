@@ -1,26 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 
 /**
- * A Redis client for interacting with a Redis server.
- *
- * ```ts
- * import { RedisClient } from "@iuioiua/redis";
- * import { assertEquals } from "@std/assert/equals";
- *
- * using redisConn = await Deno.connect({ port: 6379 });
- * const redisClient = new RedisClient(redisConn);
- *
- * const reply1 = await redisClient.sendCommand(["SET", "hello", "world"]);
- * assertEquals(reply1, "OK");
- *
- * const reply2 = await redisClient.sendCommand(["GET", "hello"]);
- * assertEquals(reply2, "world");
- * ```
- *
- * @module
- */
-
-/**
  * The command to send to the Redis server. This should be an
  * array of arguments, where the first argument is the command name and the
  * remaining arguments are the command's arguments. For the list of commands,
