@@ -38,7 +38,7 @@
     },
     "dev": {
       "description": "Run the demo server in watch mode",
-      "command": "deno serve -A --watch --env demo/server.ts"
+      "command": "deno run -A --watch --env demo/server.ts"
     }
   },
   "compilerOptions": {
