@@ -22,6 +22,7 @@ export type Reply =
   | null
   | boolean
   | bigint
+  | Uint8Array<ArrayBuffer>
   | Record<string, any>
   | readonly Reply[];
 
