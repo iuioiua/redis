@@ -174,19 +174,19 @@ function renderHomePage(
   `;
 }
 
-function assertEnv(key?: string): asserts key is string {
+function assertEnv(key: string, value?: string): asserts value is string {
   if (key === undefined) {
-    throw new Error(`Missing environment variable: ${key}`);
+    throw new Error(`Missing environment variable: ${value}`);
   }
 }
 
 const { REDIS_HOST, REDIS_PORT, REDIS_USERNAME, REDIS_PASSWORD } = Deno.env
   .toObject();
 
-assertEnv(REDIS_HOST);
-assertEnv(REDIS_PORT);
-assertEnv(REDIS_USERNAME);
-assertEnv(REDIS_PASSWORD);
+assertEnv("REDIS_HOST", REDIS_HOST);
+assertEnv("REDIS_PORT", REDIS_PORT);
+assertEnv("REDIS_USERNAME", REDIS_USERNAME);
+assertEnv("REDIS_PASSWORD", REDIS_PASSWORD);
 
 const conn = await Deno.connect({
   hostname: REDIS_HOST,
