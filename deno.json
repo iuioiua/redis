@@ -16,7 +16,7 @@
     },
     "test": {
       "description": "Run tests",
-      "command": "deno test --allow-net --trace-leaks --coverage --doc --parallel --clean ; deno task redis:stop",
+      "command": "deno test --allow-net --trace-leaks --coverage=docs/ --doc --parallel --clean ; deno task redis:stop",
       "dependencies": ["redis:start"]
     },
     "bench": {
@@ -50,7 +50,8 @@
     "noUncheckedIndexedAccess": true
   },
   "exclude": [
-    "coverage"
+    "coverage",
+    "docs"
   ],
   "lint": {
     "rules": {

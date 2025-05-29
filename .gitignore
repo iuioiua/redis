@@ -1,3 +1,5 @@
 coverage/*
 !coverage/html/
 .env
+docs/*
+!docs/html/
