@@ -1,5 +1,9 @@
 name: CI
 
+permissions:
+  contents: read
+  id-token: write # The OIDC ID token is used for authentication with JSR.
+
 on:
   push:
     branches: main
@@ -28,3 +32,7 @@ jobs:
 
       - name: Check formatting, linting and run tests
         run: deno task ok
+
+      - name: Publish
+        if: github.event_name == 'push'
+        run: deno publish
