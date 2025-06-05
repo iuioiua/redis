@@ -30,9 +30,11 @@ jobs:
         with:
           cache: true
 
-      - name: Check formatting, linting and run tests
-        run: deno task ok
-
+      # This is here, rather than at the end, so that uncommitted files created
+      # by proceeding tasks don't interfere with the publishing process.
       - name: Publish
         if: github.event_name == 'push'
         run: deno publish
+
+      - name: Check formatting, linting and run tests
+        run: deno task ok

@@ -52,11 +52,6 @@
   "exclude": [
     "coverage"
   ],
-  "publish": {
-    "exclude": [
-      "coverage"
-    ]
-  },
   "lint": {
     "rules": {
       "tags": ["jsr"]
