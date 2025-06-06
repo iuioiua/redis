@@ -20,14 +20,14 @@ async function assertSendCommandEquals(command: Command, expected: Reply) {
   assertEquals(actual, expected);
 }
 
-async function assertReadReplyEquals(
+async function assertReadReplyEquals<T extends Reply>(
   output: string,
-  expected: Reply,
+  expected: T,
   raw = false,
 ) {
   const redisClient = new RedisClient(createConn(output));
-  const { value } = await redisClient.readReplies(raw).next();
-  assertEquals(value, expected);
+  const { value } = await redisClient.readReplies<T>(raw).next();
+  assertEquals<T>(value, expected);
 }
 
 function assertReadReplyRejects(output: string, expectedMsg: string) {

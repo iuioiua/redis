@@ -396,7 +396,7 @@ pre.prettyprint {
           <div class='fl pad1y space-right2'>
             <span class='strong'>100.00%</span>
             <span class='quiet'>Lines</span>
-            <span class='fraction'>178/178</span>
+            <span class='fraction'>183/183</span>
           </div>
         </div>
       </div>
@@ -1011,7 +1011,14 @@ pre.prettyprint {
 <a href='#L605' id='L605'>605</a>
 <a href='#L606' id='L606'>606</a>
 <a href='#L607' id='L607'>607</a>
-<a href='#L608' id='L608'>608</a></pre></td>
+<a href='#L608' id='L608'>608</a>
+<a href='#L609' id='L609'>609</a>
+<a href='#L610' id='L610'>610</a>
+<a href='#L611' id='L611'>611</a>
+<a href='#L612' id='L612'>612</a>
+<a href='#L613' id='L613'>613</a>
+<a href='#L614' id='L614'>614</a>
+<a href='#L615' id='L615'>615</a></pre></td>
           <td class='line-coverage quiet'><pre><span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
@@ -1154,6 +1161,8 @@ pre.prettyprint {
 <span class='cline-any cline-yes' title='This line is covered 49 times'>x49</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-yes' title='This line is covered 147 times'>x147</span>
+<span class='cline-any cline-neutral'>&nbsp;</span>
+<span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-yes' title='This line is covered 49 times'>x49</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-yes' title='This line is covered 291 times'>x291</span>
@@ -1488,6 +1497,9 @@ pre.prettyprint {
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-yes' title='This line is covered 16 times'>x16</span>
+<span class='cline-any cline-yes' title='This line is covered 16 times'>x16</span>
+<span class='cline-any cline-yes' title='This line is covered 16 times'>x16</span>
+<span class='cline-any cline-yes' title='This line is covered 16 times'>x16</span>
 <span class='cline-any cline-yes' title='This line is covered 89 times'>x89</span>
 <span class='cline-any cline-yes' title='This line is covered 162 times'>x162</span>
 <span class='cline-any cline-yes' title='This line is covered 162 times'>x162</span>
@@ -1559,6 +1571,8 @@ pre.prettyprint {
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
+<span class='cline-any cline-yes' title='This line is covered 16 times'>x16</span>
+<span class='cline-any cline-yes' title='This line is covered 16 times'>x16</span>
 <span class='cline-any cline-yes' title='This line is covered 16 times'>x16</span>
 <span class='cline-any cline-yes' title='This line is covered 48 times'>x48</span>
 <span class='cline-any cline-yes' title='This line is covered 81 times'>x81</span>
@@ -2227,6 +2241,13 @@ pre.prettyprint {
 
 
 
+
+
+
+
+
+
+
 </pre></td>
           <td class='text'><pre class='prettyprint'>/**
  * The command to send to the Redis server. This should be an
@@ -2364,12 +2385,14 @@ async function* readLines(readable: ReadableStream&lt;Uint8Array&gt;) {
   }
 }
 
-function readNReplies(
+function readNReplies&lt;T extends Reply&gt;(
   iterator: AsyncIterableIterator&lt;Uint8Array&gt;,
   length: number,
   raw = false,
-): Promise&lt;Reply[]&gt; {
-  return Array.fromAsync({ length }, () =&gt; readReply(iterator, raw));
+): Promise&lt;T[]&gt; {
+  return Array.fromAsync({ length }, () =&gt; readReply(iterator, raw)) as Promise&lt;
+    T[]
+  &gt;;
 }
 
 function parseLine(value: Uint8Array): string {
@@ -2392,16 +2415,16 @@ function chunk&lt;T&gt;(array: readonly T[]): T[][] {
   return result;
 }
 
-async function readReply(
+async function readReply&lt;T extends Reply&gt;(
   iterator: AsyncIterableIterator&lt;Uint8Array&gt;,
   raw = false,
-): Promise&lt;Reply&gt; {
+): Promise&lt;T&gt; {
   const { value } = await iterator.next();
   switch (value[0]) {
     case ARRAY_PREFIX:
     case PUSH_PREFIX: {
       const length = Number(parseLine(value));
-      return length === -1 ? null : await readNReplies(iterator, length);
+      return (length === -1 ? null : await readNReplies(iterator, length)) as T;
     }
     case ATTRIBUTE_PREFIX: {
       // TODO: include attribute data somehow
@@ -2411,26 +2434,26 @@ async function readReply(
       return readReply(iterator, raw);
     }
     case BIG_NUMBER_PREFIX:
-      return BigInt(parseLine(value));
+      return BigInt(parseLine(value)) as T;
     case BLOB_ERROR_PREFIX: {
       // Skip to reading the next line, which is a string
       const { value } = await iterator.next();
       return Promise.reject(new RedisError(decoder.decode(value)));
     }
     case BOOLEAN_PREFIX:
-      return parseLine(value) === "t";
+      return (parseLine(value) === "t") as T;
     case BULK_STRING_PREFIX:
     case VERBATIM_STRING_PREFIX:
-      return parseLine(value) === "-1" ? null : readReply(iterator, raw);
+      return (parseLine(value) === "-1" ? null : readReply(iterator, raw)) as T;
     case DOUBLE_PREFIX:
     case INTEGER_PREFIX: {
       switch (parseLine(value)) {
         case "inf":
-          return Infinity;
+          return Infinity as T;
         case "-inf":
-          return -Infinity;
+          return -Infinity as T;
         default:
-          return Number(parseLine(value));
+          return Number(parseLine(value)) as T;
       }
     }
     case ERROR_PREFIX:
@@ -2441,16 +2464,16 @@ async function readReply(
       return Object.fromEntries(chunk(array));
     }
     case NULL_PREFIX:
-      return null;
+      return null as T;
     case SET_PREFIX:
       return new Set(
         await readNReplies(iterator, Number(parseLine(value)), raw),
-      );
+      ) as T;
     case SIMPLE_STRING_PREFIX:
-      return parseLine(value);
+      return parseLine(value) as T;
     // No prefix
     default:
-      return raw ? value : decoder.decode(value);
+      return (raw ? value : decoder.decode(value)) as T;
   }
 }
 
@@ -2703,10 +2726,13 @@ export class RedisClient {
    * assertEquals(reply2, "world");
    * ```
    */
-  sendCommand(command: Command, raw = false): Promise&lt;Reply&gt; {
+  sendCommand&lt;T extends Reply = Reply&gt;(
+    command: Command,
+    raw = false,
+  ): Promise&lt;T&gt; {
     return this.#enqueue(() =&gt; {
       this.#writer.write(createRequest(command));
-      return readReply(this.#lines, raw);
+      return readReply&lt;T&gt;(this.#lines, raw);
     });
   }
 
@@ -2775,9 +2801,11 @@ export class RedisClient {
    * await redisClient.writeCommand(["UNSUBSCRIBE", "mychannel"]);
    * ```
    */
-  async *readReplies(raw = false): AsyncIterableIterator&lt;Reply&gt; {
+  async *readReplies&lt;T extends Reply = Reply&gt;(
+    raw = false,
+  ): AsyncIterableIterator&lt;T&gt; {
     while (true) {
-      yield readReply(this.#lines, raw);
+      yield readReply&lt;T&gt;(this.#lines, raw);
     }
   }
 
@@ -2825,14 +2853,14 @@ export class RedisClient {
    * assertEquals(replies, [1, 2, 3, 4]);
    * ```
    */
-  pipelineCommands(
+  pipelineCommands&lt;T extends Reply = Reply&gt;(
     commands: readonly Command[],
     raw = false,
-  ): Promise&lt;Reply[]&gt; {
+  ): Promise&lt;T[]&gt; {
     return this.#enqueue(() =&gt; {
       const bytes = concat(commands.map(createRequest));
       this.#writer.write(bytes);
-      return readNReplies(this.#lines, commands.length, raw);
+      return readNReplies&lt;T&gt;(this.#lines, commands.length, raw);
     });
   }
 }
@@ -2845,8 +2873,8 @@ export class RedisClient {
           
       <div class='footer quiet pad2 space-top1 center small'>
         Code coverage generated by
-        <a href='https://deno.com/' target='_blank'>Deno v2.3.3</a>
-        at Fri, 30 May 2025 00:34:42 +0000
+        <a href='https://deno.com/' target='_blank'>Deno v2.3.5</a>
+        at Fri, 6 Jun 2025 00:55:57 +0000
       </div>
         </body>
       </html>

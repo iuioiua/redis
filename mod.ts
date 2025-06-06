@@ -134,12 +134,14 @@ async function* readLines(readable: ReadableStream<Uint8Array>) {
   }
 }
 
-function readNReplies(
+function readNReplies<T extends Reply>(
   iterator: AsyncIterableIterator<Uint8Array>,
   length: number,
   raw = false,
-): Promise<Reply[]> {
-  return Array.fromAsync({ length }, () => readReply(iterator, raw));
+): Promise<T[]> {
+  return Array.fromAsync({ length }, () => readReply(iterator, raw)) as Promise<
+    T[]
+  >;
 }
 
 function parseLine(value: Uint8Array): string {
@@ -162,16 +164,16 @@ function chunk<T>(array: readonly T[]): T[][] {
   return result;
 }
 
-async function readReply(
+async function readReply<T extends Reply>(
   iterator: AsyncIterableIterator<Uint8Array>,
   raw = false,
-): Promise<Reply> {
+): Promise<T> {
   const { value } = await iterator.next();
   switch (value[0]) {
     case ARRAY_PREFIX:
     case PUSH_PREFIX: {
       const length = Number(parseLine(value));
-      return length === -1 ? null : await readNReplies(iterator, length);
+      return (length === -1 ? null : await readNReplies(iterator, length)) as T;
     }
     case ATTRIBUTE_PREFIX: {
       // TODO: include attribute data somehow
@@ -181,26 +183,26 @@ async function readReply(
       return readReply(iterator, raw);
     }
     case BIG_NUMBER_PREFIX:
-      return BigInt(parseLine(value));
+      return BigInt(parseLine(value)) as T;
     case BLOB_ERROR_PREFIX: {
       // Skip to reading the next line, which is a string
       const { value } = await iterator.next();
       return Promise.reject(new RedisError(decoder.decode(value)));
     }
     case BOOLEAN_PREFIX:
-      return parseLine(value) === "t";
+      return (parseLine(value) === "t") as T;
     case BULK_STRING_PREFIX:
     case VERBATIM_STRING_PREFIX:
-      return parseLine(value) === "-1" ? null : readReply(iterator, raw);
+      return (parseLine(value) === "-1" ? null : readReply(iterator, raw)) as T;
     case DOUBLE_PREFIX:
     case INTEGER_PREFIX: {
       switch (parseLine(value)) {
         case "inf":
-          return Infinity;
+          return Infinity as T;
         case "-inf":
-          return -Infinity;
+          return -Infinity as T;
         default:
-          return Number(parseLine(value));
+          return Number(parseLine(value)) as T;
       }
     }
     case ERROR_PREFIX:
@@ -211,16 +213,16 @@ async function readReply(
       return Object.fromEntries(chunk(array));
     }
     case NULL_PREFIX:
-      return null;
+      return null as T;
     case SET_PREFIX:
       return new Set(
         await readNReplies(iterator, Number(parseLine(value)), raw),
-      );
+      ) as T;
     case SIMPLE_STRING_PREFIX:
-      return parseLine(value);
+      return parseLine(value) as T;
     // No prefix
     default:
-      return raw ? value : decoder.decode(value);
+      return (raw ? value : decoder.decode(value)) as T;
   }
 }
 
@@ -473,10 +475,13 @@ export class RedisClient {
    * assertEquals(reply2, "world");
    * ```
    */
-  sendCommand(command: Command, raw = false): Promise<Reply> {
+  sendCommand<T extends Reply = Reply>(
+    command: Command,
+    raw = false,
+  ): Promise<T> {
     return this.#enqueue(() => {
       this.#writer.write(createRequest(command));
-      return readReply(this.#lines, raw);
+      return readReply<T>(this.#lines, raw);
     });
   }
 
@@ -545,9 +550,11 @@ export class RedisClient {
    * await redisClient.writeCommand(["UNSUBSCRIBE", "mychannel"]);
    * ```
    */
-  async *readReplies(raw = false): AsyncIterableIterator<Reply> {
+  async *readReplies<T extends Reply = Reply>(
+    raw = false,
+  ): AsyncIterableIterator<T> {
     while (true) {
-      yield readReply(this.#lines, raw);
+      yield readReply<T>(this.#lines, raw);
     }
   }
 
@@ -595,14 +602,14 @@ export class RedisClient {
    * assertEquals(replies, [1, 2, 3, 4]);
    * ```
    */
-  pipelineCommands(
+  pipelineCommands<T extends Reply = Reply>(
     commands: readonly Command[],
     raw = false,
-  ): Promise<Reply[]> {
+  ): Promise<T[]> {
     return this.#enqueue(() => {
       const bytes = concat(commands.map(createRequest));
       this.#writer.write(bytes);
-      return readNReplies(this.#lines, commands.length, raw);
+      return readNReplies<T>(this.#lines, commands.length, raw);
     });
   }
 }
