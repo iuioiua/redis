@@ -187,7 +187,7 @@ async function readReply<T extends Reply>(
     case BLOB_ERROR_PREFIX: {
       // Skip to reading the next line, which is a string
       const { value } = await iterator.next();
-      return Promise.reject(new RedisError(decoder.decode(value)));
+      throw new RedisError(decoder.decode(value));
     }
     case BOOLEAN_PREFIX:
       return (parseLine(value) === "t") as T;
@@ -206,7 +206,7 @@ async function readReply<T extends Reply>(
       }
     }
     case ERROR_PREFIX:
-      return Promise.reject(new RedisError(parseLine(value)));
+      throw new RedisError(parseLine(value));
     case MAP_PREFIX: {
       const length = Number(parseLine(value)) * 2;
       const array = await readNReplies(iterator, length);
