@@ -22,7 +22,7 @@ export type Reply =
   | bigint
   | Uint8Array<ArrayBuffer>
   | Set<Reply>
-  | RedisObject
+  | ReplyObject
   | readonly Reply[];
 
 /**
@@ -31,7 +31,7 @@ export type Reply =
  * of key-value pairs, such as the
  * {@linkcode https://redis.io/docs/latest/commands/hgetall/ | HGETALL} command.
  */
-export interface RedisObject {
+export interface ReplyObject {
   [key: string]: Reply;
 }
 
