@@ -47,9 +47,7 @@ function renderHomePage(
       <body class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <main>
           <form id="control" class="mt-2 flex gap-2">
-            <div
-              class="flex flex-1 rounded-md bg-white outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-red-600"
-            >
+            <div class="flex flex-1 rounded-md bg-white outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-red-600">
               <input
                 id="search"
                 name="search"
@@ -76,9 +74,7 @@ function renderHomePage(
           </form>
           <div class="my-8 flow-root">
             <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div
-                class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8"
-              >
+              <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                 <table class="min-w-full divide-y divide-gray-300">
                   <thead>
                     <tr>
@@ -110,40 +106,38 @@ function renderHomePage(
                   </thead>
                   <tbody class="divide-y divide-gray-200">
                     ${props.reply.results.map((movie) =>
-                      html`
-                        <tr>
-                          <td
-                            class="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-0"
-                          >
-                            ${movie.extra_attributes.imdb_id
-                              ? (
-                                html`
-                                  <a
-                                    href="https://www.imdb.com/title/${movie
-                                      .extra_attributes
-                                      .imdb_id}"
-                                    class="hover:underline hover:after:content-['_↗']"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    ${movie.extra_attributes.title}
-                                  </a>
-                                `
-                              )
-                              : movie.extra_attributes.title}
-                          </td>
-                          <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
-                            ${movie.extra_attributes.genre}
-                          </td>
-                          <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
-                            ${movie.extra_attributes.release_year}
-                          </td>
-                          <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
-                            ${movie.extra_attributes.rating}
-                          </td>
-                        </tr>
-                      `
-                    ).join("")}
+      html`
+        <tr>
+          <td class="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-0">
+            ${movie.extra_attributes.imdb_id
+          ? (
+            html`
+              <a
+                href="https://www.imdb.com/title/${movie
+                .extra_attributes
+                .imdb_id}"
+                class="hover:underline hover:after:content-['_↗']"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                ${movie.extra_attributes.title}
+              </a>
+            `
+          )
+          : movie.extra_attributes.title}
+          </td>
+          <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
+            ${movie.extra_attributes.genre}
+          </td>
+          <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
+            ${movie.extra_attributes.release_year}
+          </td>
+          <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
+            ${movie.extra_attributes.rating}
+          </td>
+        </tr>
+      `
+    ).join("")}
                   </tbody>
                 </table>
               </div>
@@ -156,16 +150,14 @@ function renderHomePage(
             type="number"
             min="1"
             max="${Math.ceil(props.reply.total_results / RESULTS_PER_PAGE) ||
-              1}"
+      1}"
             value="${props.searchParams.get("page") || 1}"
             placeholder="1"
             onChange="this.form.submit()"
             class="mx-auto block rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
           >
         </main>
-        <footer
-          class="mx-auto max-w-7xl overflow-hidden px-6 py-20 sm:py-24 lg:px-8"
-        >
+        <footer class="mx-auto max-w-7xl overflow-hidden px-6 py-20 sm:py-24 lg:px-8">
           <nav
             aria-label="Footer"
             class="-mb-6 flex flex-wrap justify-center gap-x-12 gap-y-3 text-sm/6"
