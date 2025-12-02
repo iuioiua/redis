@@ -77,7 +77,7 @@ const BULK_STRING_PREFIX_BYTES = encoder.encode("$");
  * );
  * ```
  */
-export class RedisError extends Error { }
+export class RedisError extends Error {}
 
 function concat(buffers: readonly Uint8Array[]): Uint8Array {
   let length = 0;
