@@ -4,7 +4,7 @@
  * remaining arguments are the command's arguments. For the list of commands,
  * see {@link https://redis.io/docs/latest/commands/ | Redis commands}.
  */
-export type Command = readonly (string | number | Uint8Array)[];
+export type Command = readonly (string | number | Uint8Array<ArrayBuffer>)[];
 /**
  * The reply from the Redis server. This can be a string, number,
  * boolean, null, or an array of replies. The type of the reply depends on the
@@ -77,7 +77,7 @@ const BULK_STRING_PREFIX_BYTES = encoder.encode("$");
  * );
  * ```
  */
-export class RedisError extends Error {}
+export class RedisError extends Error { }
 
 function concat(buffers: readonly Uint8Array[]): Uint8Array {
   let length = 0;

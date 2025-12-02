@@ -235,3 +235,10 @@ Deno.test("RedisClient.writeCommand() + RedisClient.readReplies()", async () => 
     done: false,
   });
 });
+
+// Additional tests to verify the type fix works correctly
+Deno.test("Command type with Uint8Array<ArrayBuffer>", () => {
+  const buffer = new Uint8Array([1, 2, 3]);
+  const command: Command = ["SET", "key", buffer];
+  assertEquals(command[2], buffer);
+});
