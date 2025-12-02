@@ -235,3 +235,32 @@ Deno.test("RedisClient.writeCommand() + RedisClient.readReplies()", async () => 
     done: false,
   });
 });
+
+Deno.test("RedisClient.sendCommand() - error recovery", async () => {
+  // Send an invalid command that will cause an error
+  try {
+    await redisClient.sendCommand(["INVALIDCOMMAND", "arg1"]);
+    throw new Error("Expected RedisError to be thrown");
+  } catch (error) {
+    if (!(error instanceof RedisError)) {
+      throw error;
+    }
+  }
+
+  // Subsequent commands should still work
+  await assertSendCommandEquals(["SET", "test-key", "test-value"], "OK");
+  await assertSendCommandEquals(["GET", "test-key"], "test-value");
+
+  // Another error should also be handled correctly
+  try {
+    await redisClient.sendCommand(["ANOTHERNONEXISTENTCMD"]);
+    throw new Error("Expected RedisError to be thrown");
+  } catch (error) {
+    if (!(error instanceof RedisError)) {
+      throw error;
+    }
+  }
+
+  // And subsequent commands should still work
+  await assertSendCommandEquals(["DEL", "test-key"], 1);
+});

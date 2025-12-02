@@ -435,7 +435,7 @@ export class RedisClient {
   }
 
   #enqueue<T>(task: () => Promise<T>): Promise<T> {
-    this.#queue = this.#queue.then(task);
+    this.#queue = this.#queue.then(task, task);
     return this.#queue;
   }
 
