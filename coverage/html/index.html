@@ -7,6 +7,15 @@
         <style>/* Copyright 2015 the Istanbul contributors. All rights reserved. ISC license. */
 /* Copyright 2018-2023 the Deno authors. All rights reserved. MIT license. */
 
+.light {
+  /* forces light color-scheme */
+  color-scheme: light;
+}
+.dark {
+  /* forces dark color-scheme */
+  color-scheme: dark;
+}
+
 body,
 html {
   margin: 0;
@@ -14,7 +23,6 @@ html {
   height: 100%;
 }
 body {
-  color-scheme: light dark;
   font-family:
     Helvetica Neue,
     Helvetica,
@@ -169,7 +177,7 @@ table.coverage td span.cline-any {
   position: relative;
   padding: 0 4px;
   background: light-dark(#333, #ddd);
-  color: light-dark(yellow, #cc0);
+  color: light-dark(yellow, #717108);
 }
 
 .skip-if-branch {
@@ -189,20 +197,20 @@ table.coverage td span.cline-any {
   width: 100%;
 }
 .coverage-summary tr {
-  border-bottom: 1px solid light-dark(#bbb, #444);
+  border-bottom: 1px solid light-dark(#bbb, #7E7E7E);
 }
 .keyline-all {
-  border: 1px solid light-dark(#ddd, #222);
+  border: 1px solid light-dark(#ddd, #7E7E7E);
 }
 .coverage-summary td,
 .coverage-summary th {
   padding: 10px;
 }
 .coverage-summary tbody {
-  border: 1px solid light-dark(#bbb, #444);
+  border: 1px solid light-dark(#bbb, #7E7E7E);
 }
 .coverage-summary td {
-  border-right: 1px solid light-dark(#bbb, #444);
+  border-right: 1px solid light-dark(#bbb, #7E7E7E);
 }
 .coverage-summary td:last-child {
   border-right: none;
@@ -371,26 +379,151 @@ pre.prettyprint {
 .overflow-auto {
   overflow: auto;
 }
+.flex-header {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#theme-toggle {
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+}
+#theme-toggle svg {
+  width: 20px;
+  height: 20px;
+}
 </style>
+        <script>// Copyright 2018-2025 the Deno authors. MIT license.
+
+function setTheme(theme, themeToggle) {
+  if (theme === "dark") {
+    document.documentElement.classList.add("dark");
+    document.documentElement.classList.remove("light");
+    localStorage.setItem("deno-coverage-theme", "dark");
+  } else {
+    document.documentElement.classList.add("light");
+    document.documentElement.classList.remove("dark");
+    localStorage.setItem("deno-coverage-theme", "light");
+  }
+
+  const darkIcon = themeToggle.children[0];
+  const lightIcon = themeToggle.children[1];
+
+  if (theme === "dark") {
+    darkIcon.style.display = "none";
+    lightIcon.style.display = "block";
+  } else {
+    darkIcon.style.display = "block";
+    lightIcon.style.display = "none";
+  }
+}
+
+window.addEventListener("load", () => {
+  const themeToggle = document.getElementById("theme-toggle");
+  themeToggle.removeAttribute("style");
+
+  const storedTheme = localStorage.getItem("deno-coverage-theme");
+  const systemPrefersDark =
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  if (storedTheme) {
+    setTheme(storedTheme, themeToggle);
+  } else {
+    setTheme(systemPrefersDark ? "dark" : "light", themeToggle);
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      setTheme(isDark ? "light" : "dark", themeToggle);
+    });
+  }
+});
+
+// prevent flash
+const theme = localStorage.getItem("deno-coverage-theme") ||
+  (window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light");
+document.documentElement.classList.add(theme);
+</script>
         <meta name='viewport' content='width=device-width, initial-scale=1'>
       </head>
         <body>
           <div class='wrapper'>
             
-      <div class='pad1'>
-        <h1>All files</h1>
-        <div class='clearfix'>
-          <div class='fl pad1y space-right2'>
-            <span class='strong'>97.37%</span>
-            <span class='quiet'>Branches</span>
-            <span class='fraction'>37/38</span>
-          </div>
-          <div class='fl pad1y space-right2'>
-            <span class='strong'>100.00%</span>
-            <span class='quiet'>Lines</span>
-            <span class='fraction'>183/183</span>
+      <div class='pad1 flex-header'>
+        <div>
+          <h1>All files</h1>
+          <div class='clearfix'>
+            <div class='fl pad1y space-right2'>
+              <span class='strong'>97.37%</span>
+              <span class='quiet'>Branches</span>
+              <span class='fraction'>37/38</span>
+            </div>
+            <div class='fl pad1y space-right2'>
+              <span class='strong'>100.00%</span>
+              <span class='quiet'>Lines</span>
+              <span class='fraction'>188/188</span>
+            </div>
           </div>
         </div>
+        <button id="theme-toggle" type="button" aria-label="Toggle dark mode" style="display: none;">
+          <svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="currentColor"
+>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path
+    d="M12 1.992a10 10 0 1 0 9.236 13.838c.341 -.82 -.476 -1.644 -1.298 -1.31a6.5 6.5 0 0 1 -6.864 -10.787l.077 -.08c.551 -.63 .113 -1.653 -.758 -1.653h-.266l-.068 -.006l-.06 -.002z"
+  />
+</svg>
+
+          <svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="currentColor"
+  style="display: none;"
+>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path
+    d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z"
+  />
+  <path
+    d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z"
+  />
+  <path
+    d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z"
+  />
+  <path
+    d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z"
+  />
+  <path
+    d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z"
+  />
+  <path
+    d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z"
+  />
+  <path
+    d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z"
+  />
+  <path
+    d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z"
+  />
+  <path
+    d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z"
+  />
+</svg>
+
+        </button>
       </div>
       <div class='status-line high'></div>
             <div class='pad1 overflow-auto'>
@@ -418,7 +551,7 @@ pre.prettyprint {
         <td class='pct high'>97.37%</td>
         <td class='abs high'>37/38</td>
         <td class='pct high'>100.00%</td>
-        <td class='abs high'>183/183</td>
+        <td class='abs high'>188/188</td>
       </tr>
         </tbody>
       </table>
@@ -428,8 +561,8 @@ pre.prettyprint {
           
       <div class='footer quiet pad2 space-top1 center small'>
         Code coverage generated by
-        <a href='https://deno.com/' target='_blank'>Deno v2.3.6+090df40</a>
-        at Sun, 15 Jun 2025 03:51:06 +0000
+        <a href='https://deno.com/' target='_blank'>Deno v2.6.3</a>
+        at Mon, 5 Jan 2026 07:04:07 +0000
       </div>
         </body>
       </html>

@@ -7,6 +7,15 @@
         <style>/* Copyright 2015 the Istanbul contributors. All rights reserved. ISC license. */
 /* Copyright 2018-2023 the Deno authors. All rights reserved. MIT license. */
 
+.light {
+  /* forces light color-scheme */
+  color-scheme: light;
+}
+.dark {
+  /* forces dark color-scheme */
+  color-scheme: dark;
+}
+
 body,
 html {
   margin: 0;
@@ -14,7 +23,6 @@ html {
   height: 100%;
 }
 body {
-  color-scheme: light dark;
   font-family:
     Helvetica Neue,
     Helvetica,
@@ -169,7 +177,7 @@ table.coverage td span.cline-any {
   position: relative;
   padding: 0 4px;
   background: light-dark(#333, #ddd);
-  color: light-dark(yellow, #cc0);
+  color: light-dark(yellow, #717108);
 }
 
 .skip-if-branch {
@@ -189,20 +197,20 @@ table.coverage td span.cline-any {
   width: 100%;
 }
 .coverage-summary tr {
-  border-bottom: 1px solid light-dark(#bbb, #444);
+  border-bottom: 1px solid light-dark(#bbb, #7E7E7E);
 }
 .keyline-all {
-  border: 1px solid light-dark(#ddd, #222);
+  border: 1px solid light-dark(#ddd, #7E7E7E);
 }
 .coverage-summary td,
 .coverage-summary th {
   padding: 10px;
 }
 .coverage-summary tbody {
-  border: 1px solid light-dark(#bbb, #444);
+  border: 1px solid light-dark(#bbb, #7E7E7E);
 }
 .coverage-summary td {
-  border-right: 1px solid light-dark(#bbb, #444);
+  border-right: 1px solid light-dark(#bbb, #7E7E7E);
 }
 .coverage-summary td:last-child {
   border-right: none;
@@ -371,26 +379,151 @@ pre.prettyprint {
 .overflow-auto {
   overflow: auto;
 }
+.flex-header {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#theme-toggle {
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+}
+#theme-toggle svg {
+  width: 20px;
+  height: 20px;
+}
 </style>
+        <script>// Copyright 2018-2025 the Deno authors. MIT license.
+
+function setTheme(theme, themeToggle) {
+  if (theme === "dark") {
+    document.documentElement.classList.add("dark");
+    document.documentElement.classList.remove("light");
+    localStorage.setItem("deno-coverage-theme", "dark");
+  } else {
+    document.documentElement.classList.add("light");
+    document.documentElement.classList.remove("dark");
+    localStorage.setItem("deno-coverage-theme", "light");
+  }
+
+  const darkIcon = themeToggle.children[0];
+  const lightIcon = themeToggle.children[1];
+
+  if (theme === "dark") {
+    darkIcon.style.display = "none";
+    lightIcon.style.display = "block";
+  } else {
+    darkIcon.style.display = "block";
+    lightIcon.style.display = "none";
+  }
+}
+
+window.addEventListener("load", () => {
+  const themeToggle = document.getElementById("theme-toggle");
+  themeToggle.removeAttribute("style");
+
+  const storedTheme = localStorage.getItem("deno-coverage-theme");
+  const systemPrefersDark =
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  if (storedTheme) {
+    setTheme(storedTheme, themeToggle);
+  } else {
+    setTheme(systemPrefersDark ? "dark" : "light", themeToggle);
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      setTheme(isDark ? "light" : "dark", themeToggle);
+    });
+  }
+});
+
+// prevent flash
+const theme = localStorage.getItem("deno-coverage-theme") ||
+  (window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light");
+document.documentElement.classList.add(theme);
+</script>
         <meta name='viewport' content='width=device-width, initial-scale=1'>
       </head>
         <body>
           <div class='wrapper'>
             
-      <div class='pad1'>
-        <h1><a href='index.html'>All files</a> / mod.ts</h1>
-        <div class='clearfix'>
-          <div class='fl pad1y space-right2'>
-            <span class='strong'>97.37%</span>
-            <span class='quiet'>Branches</span>
-            <span class='fraction'>37/38</span>
-          </div>
-          <div class='fl pad1y space-right2'>
-            <span class='strong'>100.00%</span>
-            <span class='quiet'>Lines</span>
-            <span class='fraction'>183/183</span>
+      <div class='pad1 flex-header'>
+        <div>
+          <h1><a href='index.html'>All files</a> / mod.ts</h1>
+          <div class='clearfix'>
+            <div class='fl pad1y space-right2'>
+              <span class='strong'>97.37%</span>
+              <span class='quiet'>Branches</span>
+              <span class='fraction'>37/38</span>
+            </div>
+            <div class='fl pad1y space-right2'>
+              <span class='strong'>100.00%</span>
+              <span class='quiet'>Lines</span>
+              <span class='fraction'>188/188</span>
+            </div>
           </div>
         </div>
+        <button id="theme-toggle" type="button" aria-label="Toggle dark mode" style="display: none;">
+          <svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="currentColor"
+>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path
+    d="M12 1.992a10 10 0 1 0 9.236 13.838c.341 -.82 -.476 -1.644 -1.298 -1.31a6.5 6.5 0 0 1 -6.864 -10.787l.077 -.08c.551 -.63 .113 -1.653 -.758 -1.653h-.266l-.068 -.006l-.06 -.002z"
+  />
+</svg>
+
+          <svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="currentColor"
+  style="display: none;"
+>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path
+    d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z"
+  />
+  <path
+    d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z"
+  />
+  <path
+    d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z"
+  />
+  <path
+    d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z"
+  />
+  <path
+    d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z"
+  />
+  <path
+    d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z"
+  />
+  <path
+    d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z"
+  />
+  <path
+    d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z"
+  />
+  <path
+    d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z"
+  />
+</svg>
+
+        </button>
       </div>
       <div class='status-line high'></div>
             <div class='pad1 overflow-auto'>
@@ -1010,7 +1143,12 @@ pre.prettyprint {
 <a href='#L612' id='L612'>612</a>
 <a href='#L613' id='L613'>613</a>
 <a href='#L614' id='L614'>614</a>
-<a href='#L615' id='L615'>615</a></pre></td>
+<a href='#L615' id='L615'>615</a>
+<a href='#L616' id='L616'>616</a>
+<a href='#L617' id='L617'>617</a>
+<a href='#L618' id='L618'>618</a>
+<a href='#L619' id='L619'>619</a>
+<a href='#L620' id='L620'>620</a></pre></td>
           <td class='line-coverage quiet'><pre><span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
@@ -1090,21 +1228,26 @@ pre.prettyprint {
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
-<span class='cline-any cline-yes' title='This line is covered 32 times'>x32</span>
+<span class='cline-any cline-yes' title='This line is covered 16 times'>x16</span>
+<span class='cline-any cline-yes' title='This line is covered 16 times'>x16</span>
+<span class='cline-any cline-yes' title='This line is covered 22 times'>x22</span>
+<span class='cline-any cline-yes' title='This line is covered 22 times'>x22</span>
+<span class='cline-any cline-yes' title='This line is covered 22 times'>x22</span>
+<span class='cline-any cline-yes' title='This line is covered 16 times'>x16</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
-<span class='cline-any cline-yes' title='This line is covered 221 times'>x221</span>
-<span class='cline-any cline-yes' title='This line is covered 221 times'>x221</span>
-<span class='cline-any cline-yes' title='This line is covered 221 times'>x221</span>
-<span class='cline-any cline-yes' title='This line is covered 1840 times'>x1840</span>
-<span class='cline-any cline-yes' title='This line is covered 1840 times'>x1840</span>
-<span class='cline-any cline-yes' title='This line is covered 221 times'>x221</span>
-<span class='cline-any cline-yes' title='This line is covered 221 times'>x221</span>
-<span class='cline-any cline-yes' title='This line is covered 221 times'>x221</span>
-<span class='cline-any cline-yes' title='This line is covered 1840 times'>x1840</span>
-<span class='cline-any cline-yes' title='This line is covered 1840 times'>x1840</span>
-<span class='cline-any cline-yes' title='This line is covered 1840 times'>x1840</span>
-<span class='cline-any cline-yes' title='This line is covered 221 times'>x221</span>
-<span class='cline-any cline-yes' title='This line is covered 221 times'>x221</span>
+<span class='cline-any cline-yes' title='This line is covered 231 times'>x231</span>
+<span class='cline-any cline-yes' title='This line is covered 231 times'>x231</span>
+<span class='cline-any cline-yes' title='This line is covered 231 times'>x231</span>
+<span class='cline-any cline-yes' title='This line is covered 1925 times'>x1925</span>
+<span class='cline-any cline-yes' title='This line is covered 1925 times'>x1925</span>
+<span class='cline-any cline-yes' title='This line is covered 231 times'>x231</span>
+<span class='cline-any cline-yes' title='This line is covered 231 times'>x231</span>
+<span class='cline-any cline-yes' title='This line is covered 231 times'>x231</span>
+<span class='cline-any cline-yes' title='This line is covered 1925 times'>x1925</span>
+<span class='cline-any cline-yes' title='This line is covered 1925 times'>x1925</span>
+<span class='cline-any cline-yes' title='This line is covered 1925 times'>x1925</span>
+<span class='cline-any cline-yes' title='This line is covered 231 times'>x231</span>
+<span class='cline-any cline-yes' title='This line is covered 231 times'>x231</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
@@ -1112,39 +1255,39 @@ pre.prettyprint {
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-yes' title='This line is covered 16 times'>x16</span>
-<span class='cline-any cline-yes' title='This line is covered 109 times'>x109</span>
-<span class='cline-any cline-yes' title='This line is covered 109 times'>x109</span>
-<span class='cline-any cline-yes' title='This line is covered 109 times'>x109</span>
-<span class='cline-any cline-yes' title='This line is covered 109 times'>x109</span>
-<span class='cline-any cline-yes' title='This line is covered 109 times'>x109</span>
-<span class='cline-any cline-yes' title='This line is covered 109 times'>x109</span>
-<span class='cline-any cline-yes' title='This line is covered 331 times'>x331</span>
-<span class='cline-any cline-yes' title='This line is covered 331 times'>x331</span>
-<span class='cline-any cline-yes' title='This line is covered 331 times'>x331</span>
-<span class='cline-any cline-yes' title='This line is covered 331 times'>x331</span>
-<span class='cline-any cline-yes' title='This line is covered 331 times'>x331</span>
-<span class='cline-any cline-yes' title='This line is covered 331 times'>x331</span>
-<span class='cline-any cline-yes' title='This line is covered 331 times'>x331</span>
-<span class='cline-any cline-yes' title='This line is covered 331 times'>x331</span>
-<span class='cline-any cline-yes' title='This line is covered 331 times'>x331</span>
+<span class='cline-any cline-yes' title='This line is covered 114 times'>x114</span>
+<span class='cline-any cline-yes' title='This line is covered 114 times'>x114</span>
+<span class='cline-any cline-yes' title='This line is covered 114 times'>x114</span>
+<span class='cline-any cline-yes' title='This line is covered 114 times'>x114</span>
+<span class='cline-any cline-yes' title='This line is covered 114 times'>x114</span>
+<span class='cline-any cline-yes' title='This line is covered 114 times'>x114</span>
+<span class='cline-any cline-yes' title='This line is covered 346 times'>x346</span>
+<span class='cline-any cline-yes' title='This line is covered 346 times'>x346</span>
+<span class='cline-any cline-yes' title='This line is covered 346 times'>x346</span>
+<span class='cline-any cline-yes' title='This line is covered 346 times'>x346</span>
+<span class='cline-any cline-yes' title='This line is covered 346 times'>x346</span>
+<span class='cline-any cline-yes' title='This line is covered 346 times'>x346</span>
+<span class='cline-any cline-yes' title='This line is covered 346 times'>x346</span>
+<span class='cline-any cline-yes' title='This line is covered 346 times'>x346</span>
+<span class='cline-any cline-yes' title='This line is covered 346 times'>x346</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
-<span class='cline-any cline-yes' title='This line is covered 331 times'>x331</span>
-<span class='cline-any cline-yes' title='This line is covered 109 times'>x109</span>
-<span class='cline-any cline-yes' title='This line is covered 109 times'>x109</span>
+<span class='cline-any cline-yes' title='This line is covered 346 times'>x346</span>
+<span class='cline-any cline-yes' title='This line is covered 114 times'>x114</span>
+<span class='cline-any cline-yes' title='This line is covered 114 times'>x114</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-yes' title='This line is covered 60 times'>x60</span>
 <span class='cline-any cline-yes' title='This line is covered 60 times'>x60</span>
 <span class='cline-any cline-yes' title='This line is covered 60 times'>x60</span>
-<span class='cline-any cline-yes' title='This line is covered 676 times'>x676</span>
-<span class='cline-any cline-yes' title='This line is covered 169 times'>x169</span>
-<span class='cline-any cline-yes' title='This line is covered 169 times'>x169</span>
-<span class='cline-any cline-yes' title='This line is covered 169 times'>x169</span>
-<span class='cline-any cline-yes' title='This line is covered 169 times'>x169</span>
-<span class='cline-any cline-yes' title='This line is covered 169 times'>x169</span>
-<span class='cline-any cline-yes' title='This line is covered 497 times'>x497</span>
-<span class='cline-any cline-yes' title='This line is covered 781 times'>x781</span>
-<span class='cline-any cline-yes' title='This line is covered 781 times'>x781</span>
-<span class='cline-any cline-yes' title='This line is covered 169 times'>x169</span>
+<span class='cline-any cline-yes' title='This line is covered 696 times'>x696</span>
+<span class='cline-any cline-yes' title='This line is covered 174 times'>x174</span>
+<span class='cline-any cline-yes' title='This line is covered 174 times'>x174</span>
+<span class='cline-any cline-yes' title='This line is covered 174 times'>x174</span>
+<span class='cline-any cline-yes' title='This line is covered 174 times'>x174</span>
+<span class='cline-any cline-yes' title='This line is covered 174 times'>x174</span>
+<span class='cline-any cline-yes' title='This line is covered 508 times'>x508</span>
+<span class='cline-any cline-yes' title='This line is covered 798 times'>x798</span>
+<span class='cline-any cline-yes' title='This line is covered 798 times'>x798</span>
+<span class='cline-any cline-yes' title='This line is covered 174 times'>x174</span>
 <span class='cline-any cline-yes' title='This line is covered 60 times'>x60</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-yes' title='This line is covered 49 times'>x49</span>
@@ -1157,9 +1300,9 @@ pre.prettyprint {
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-yes' title='This line is covered 49 times'>x49</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
-<span class='cline-any cline-yes' title='This line is covered 291 times'>x291</span>
-<span class='cline-any cline-yes' title='This line is covered 291 times'>x291</span>
-<span class='cline-any cline-yes' title='This line is covered 291 times'>x291</span>
+<span class='cline-any cline-yes' title='This line is covered 297 times'>x297</span>
+<span class='cline-any cline-yes' title='This line is covered 297 times'>x297</span>
+<span class='cline-any cline-yes' title='This line is covered 297 times'>x297</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
@@ -1177,67 +1320,67 @@ pre.prettyprint {
 <span class='cline-any cline-yes' title='This line is covered 25 times'>x25</span>
 <span class='cline-any cline-yes' title='This line is covered 25 times'>x25</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
-<span class='cline-any cline-yes' title='This line is covered 705 times'>x705</span>
-<span class='cline-any cline-yes' title='This line is covered 362 times'>x362</span>
-<span class='cline-any cline-yes' title='This line is covered 362 times'>x362</span>
-<span class='cline-any cline-yes' title='This line is covered 362 times'>x362</span>
-<span class='cline-any cline-yes' title='This line is covered 688 times'>x688</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
+<span class='cline-any cline-yes' title='This line is covered 717 times'>x717</span>
+<span class='cline-any cline-yes' title='This line is covered 368 times'>x368</span>
+<span class='cline-any cline-yes' title='This line is covered 368 times'>x368</span>
+<span class='cline-any cline-yes' title='This line is covered 368 times'>x368</span>
+<span class='cline-any cline-yes' title='This line is covered 700 times'>x700</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
-<span class='cline-any cline-yes' title='This line is covered 345 times'>x345</span>
+<span class='cline-any cline-yes' title='This line is covered 351 times'>x351</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
-<span class='cline-any cline-yes' title='This line is covered 345 times'>x345</span>
-<span class='cline-any cline-yes' title='This line is covered 345 times'>x345</span>
-<span class='cline-any cline-yes' title='This line is covered 345 times'>x345</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
-<span class='cline-any cline-yes' title='This line is covered 345 times'>x345</span>
-<span class='cline-any cline-yes' title='This line is covered 687 times'>x687</span>
+<span class='cline-any cline-yes' title='This line is covered 351 times'>x351</span>
+<span class='cline-any cline-yes' title='This line is covered 351 times'>x351</span>
+<span class='cline-any cline-yes' title='This line is covered 351 times'>x351</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
+<span class='cline-any cline-yes' title='This line is covered 351 times'>x351</span>
+<span class='cline-any cline-yes' title='This line is covered 699 times'>x699</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
-<span class='cline-any cline-yes' title='This line is covered 344 times'>x344</span>
-<span class='cline-any cline-yes' title='This line is covered 344 times'>x344</span>
-<span class='cline-any cline-yes' title='This line is covered 344 times'>x344</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
-<span class='cline-any cline-yes' title='This line is covered 347 times'>x347</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
-<span class='cline-any cline-yes' title='This line is covered 443 times'>x443</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
-<span class='cline-any cline-yes' title='This line is covered 734 times'>x734</span>
-<span class='cline-any cline-yes' title='This line is covered 391 times'>x391</span>
-<span class='cline-any cline-yes' title='This line is covered 391 times'>x391</span>
+<span class='cline-any cline-yes' title='This line is covered 350 times'>x350</span>
+<span class='cline-any cline-yes' title='This line is covered 350 times'>x350</span>
+<span class='cline-any cline-yes' title='This line is covered 350 times'>x350</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
+<span class='cline-any cline-yes' title='This line is covered 353 times'>x353</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
+<span class='cline-any cline-yes' title='This line is covered 450 times'>x450</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
+<span class='cline-any cline-yes' title='This line is covered 747 times'>x747</span>
+<span class='cline-any cline-yes' title='This line is covered 398 times'>x398</span>
+<span class='cline-any cline-yes' title='This line is covered 398 times'>x398</span>
+<span class='cline-any cline-yes' title='This line is covered 399 times'>x399</span>
+<span class='cline-any cline-yes' title='This line is covered 398 times'>x398</span>
+<span class='cline-any cline-yes' title='This line is covered 399 times'>x399</span>
+<span class='cline-any cline-yes' title='This line is covered 398 times'>x398</span>
+<span class='cline-any cline-yes' title='This line is covered 445 times'>x445</span>
+<span class='cline-any cline-yes' title='This line is covered 398 times'>x398</span>
+<span class='cline-any cline-yes' title='This line is covered 398 times'>x398</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
+<span class='cline-any cline-yes' title='This line is covered 353 times'>x353</span>
+<span class='cline-any cline-yes' title='This line is covered 707 times'>x707</span>
+<span class='cline-any cline-yes' title='This line is covered 358 times'>x358</span>
+<span class='cline-any cline-yes' title='This line is covered 358 times'>x358</span>
+<span class='cline-any cline-yes' title='This line is covered 358 times'>x358</span>
+<span class='cline-any cline-yes' title='This line is covered 358 times'>x358</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
+<span class='cline-any cline-yes' title='This line is covered 350 times'>x350</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
+<span class='cline-any cline-yes' title='This line is covered 350 times'>x350</span>
+<span class='cline-any cline-yes' title='This line is covered 350 times'>x350</span>
+<span class='cline-any cline-neutral'>&nbsp;</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
 <span class='cline-any cline-yes' title='This line is covered 392 times'>x392</span>
-<span class='cline-any cline-yes' title='This line is covered 391 times'>x391</span>
-<span class='cline-any cline-yes' title='This line is covered 392 times'>x392</span>
-<span class='cline-any cline-yes' title='This line is covered 391 times'>x391</span>
-<span class='cline-any cline-yes' title='This line is covered 437 times'>x437</span>
-<span class='cline-any cline-yes' title='This line is covered 391 times'>x391</span>
-<span class='cline-any cline-yes' title='This line is covered 391 times'>x391</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
-<span class='cline-any cline-yes' title='This line is covered 345 times'>x345</span>
-<span class='cline-any cline-yes' title='This line is covered 695 times'>x695</span>
-<span class='cline-any cline-yes' title='This line is covered 352 times'>x352</span>
-<span class='cline-any cline-yes' title='This line is covered 352 times'>x352</span>
-<span class='cline-any cline-yes' title='This line is covered 352 times'>x352</span>
-<span class='cline-any cline-yes' title='This line is covered 352 times'>x352</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
-<span class='cline-any cline-yes' title='This line is covered 344 times'>x344</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
-<span class='cline-any cline-yes' title='This line is covered 344 times'>x344</span>
-<span class='cline-any cline-yes' title='This line is covered 344 times'>x344</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
-<span class='cline-any cline-yes' title='This line is covered 385 times'>x385</span>
-<span class='cline-any cline-neutral'>&nbsp;</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
-<span class='cline-any cline-yes' title='This line is covered 439 times'>x439</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
-<span class='cline-any cline-yes' title='This line is covered 343 times'>x343</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
+<span class='cline-any cline-yes' title='This line is covered 446 times'>x446</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
+<span class='cline-any cline-yes' title='This line is covered 349 times'>x349</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
@@ -1448,9 +1591,9 @@ pre.prettyprint {
 <span class='cline-any cline-yes' title='This line is covered 60 times'>x60</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-yes' title='This line is covered 16 times'>x16</span>
-<span class='cline-any cline-yes' title='This line is covered 100 times'>x100</span>
-<span class='cline-any cline-yes' title='This line is covered 100 times'>x100</span>
-<span class='cline-any cline-yes' title='This line is covered 100 times'>x100</span>
+<span class='cline-any cline-yes' title='This line is covered 105 times'>x105</span>
+<span class='cline-any cline-yes' title='This line is covered 105 times'>x105</span>
+<span class='cline-any cline-yes' title='This line is covered 105 times'>x105</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
@@ -1492,11 +1635,11 @@ pre.prettyprint {
 <span class='cline-any cline-yes' title='This line is covered 16 times'>x16</span>
 <span class='cline-any cline-yes' title='This line is covered 16 times'>x16</span>
 <span class='cline-any cline-yes' title='This line is covered 16 times'>x16</span>
-<span class='cline-any cline-yes' title='This line is covered 89 times'>x89</span>
-<span class='cline-any cline-yes' title='This line is covered 162 times'>x162</span>
-<span class='cline-any cline-yes' title='This line is covered 162 times'>x162</span>
-<span class='cline-any cline-yes' title='This line is covered 89 times'>x89</span>
-<span class='cline-any cline-yes' title='This line is covered 89 times'>x89</span>
+<span class='cline-any cline-yes' title='This line is covered 94 times'>x94</span>
+<span class='cline-any cline-yes' title='This line is covered 172 times'>x172</span>
+<span class='cline-any cline-yes' title='This line is covered 172 times'>x172</span>
+<span class='cline-any cline-yes' title='This line is covered 94 times'>x94</span>
+<span class='cline-any cline-yes' title='This line is covered 94 times'>x94</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
 <span class='cline-any cline-neutral'>&nbsp;</span>
@@ -1627,6 +1770,11 @@ pre.prettyprint {
 <span class='cline-any cline-yes' title='This line is covered 19 times'>x19</span>
 <span class='cline-any cline-yes' title='This line is covered 16 times'>x16</span></pre></td>
           <td class='branch-coverage quiet'><pre>
+
+
+
+
+
 
 
 
@@ -2247,7 +2395,7 @@ pre.prettyprint {
  * remaining arguments are the command's arguments. For the list of commands,
  * see {@link https://redis.io/docs/latest/commands/ | Redis commands}.
  */
-export type Command = readonly (string | number | Uint8Array)[];
+export type Command = readonly (string | number | Uint8Array&lt;ArrayBuffer&gt;)[];
 /**
  * The reply from the Redis server. This can be a string, number,
  * boolean, null, or an array of replies. The type of the reply depends on the
@@ -2320,7 +2468,12 @@ const BULK_STRING_PREFIX_BYTES = encoder.encode("$");
  * );
  * ```
  */
-export class RedisError extends Error {}
+export class RedisError extends Error {
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options);
+    this.name = this.constructor.name;
+  }
+}
 
 function concat(buffers: readonly Uint8Array[]): Uint8Array {
   let length = 0;
@@ -2678,7 +2831,7 @@ export class RedisClient {
   }
 
   #enqueue&lt;T&gt;(task: () =&gt; Promise&lt;T&gt;): Promise&lt;T&gt; {
-    this.#queue = this.#queue.then(task);
+    this.#queue = this.#queue.then(task, task);
     return this.#queue;
   }
 
@@ -2865,8 +3018,8 @@ export class RedisClient {
           
       <div class='footer quiet pad2 space-top1 center small'>
         Code coverage generated by
-        <a href='https://deno.com/' target='_blank'>Deno v2.3.6+090df40</a>
-        at Sun, 15 Jun 2025 03:51:06 +0000
+        <a href='https://deno.com/' target='_blank'>Deno v2.6.3</a>
+        at Mon, 5 Jan 2026 07:04:07 +0000
       </div>
         </body>
       </html>

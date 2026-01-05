@@ -258,3 +258,11 @@ Deno.test("RedisClient.sendCommand() - error recovery", async () => {
   // And subsequent commands should still work
   await assertSendCommandEquals(["DEL", "test-key"], 1);
 });
+
+Deno.test("RedisError", () => {
+  const message = crypto.randomUUID();
+  const cause = crypto.randomUUID();
+  const error = new RedisError(message, { cause });
+  assertEquals(error.message, message);
+  assertEquals(error.cause, cause);
+});
