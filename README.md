@@ -2,6 +2,7 @@
 
 [![JSR](https://jsr.io/badges/@iuioiua/redis)](https://jsr.io/@iuioiua/redis)
 [![CI](https://github.com/iuioiua/redis/actions/workflows/ci.yml/badge.svg)](https://github.com/iuioiua/redis/actions/workflows/ci.yml)
+[![Test coverage](./coverage-badge.svg)](https://redis-coverage.iuioiua.deno.net/)
 
 Fast, lightweight [Redis](https://redis.io/) client built upon the
 [Web Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Streams_API).
@@ -39,7 +40,6 @@ assertEquals(reply2, "world");
 - [Demo](https://redis-demo.iuioiua.deno.net/)
 - [Documentation](https://jsr.io/@iuioiua/redis/doc)
 - [Contributing guidelines](./CONTRIBUTING.md)
-- [Test coverage](https://redis-coverage.iuioiua.deno.net/)
 
 ## Known issues
 

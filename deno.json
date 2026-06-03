@@ -9,7 +9,7 @@
     "redis:start": "sh -c 'if [ \"$GITHUB_ACTIONS\" != \"true\" ]; then redis-server --save \"\" --appendonly no --daemonize yes; fi'",
     "redis:stop": "sh -c 'if [ \"$GITHUB_ACTIONS\" != \"true\" ]; then redis-cli SHUTDOWN; fi'",
     "test": {
-      "command": "deno test --allow-net --trace-leaks --coverage --doc --parallel --clean ; deno task redis:stop",
+      "command": "deno test --allow-net --trace-leaks --coverage --doc --parallel --clean; deno task redis:stop; deno x lcov-badge-generator -o coverage-badge.svg coverage/lcov.info",
       "dependencies": ["redis:start"]
     },
     "bench": {
@@ -31,9 +31,7 @@
     "noImplicitOverride": true,
     "noUncheckedIndexedAccess": true
   },
-  "exclude": [
-    "coverage"
-  ],
+  "exclude": ["coverage", "coverage-badge.svg"],
   "lint": {
     "rules": {
       "tags": ["jsr"]
