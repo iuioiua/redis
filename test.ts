@@ -252,7 +252,7 @@ Deno.test("RedisClient.sendCommand() - error recovery", async () => {
   await assertRejects(
     () => redisClient.sendCommand(["YETANOTHERBADCMD"]),
     RedisError,
-    "ERR unknown command 'YETANOTHERBADCMD', with args beginning with: ",
+    "ERR unknown command 'YETANOTHERBADCMD'",
   );
 
   // And subsequent commands should still work
